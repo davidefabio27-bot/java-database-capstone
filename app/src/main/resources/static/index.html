@@ -102,3 +102,67 @@ and triggers modal-based login functionality.
     * Properly close all opened tags to complete the document structure.
 
  -->
+
+ <!-- index.html -->
+<!-- Landing page for Clinic System: Users select role (Admin, Doctor, Patient) -->
+
+<!-- 1-2. -->
+ <!DOCTYPE html> 
+ <!-- 3. -->
+ <html lang="en"> 
+
+<!-- 4. -->
+ <head> 
+     <!-- 5. -->
+    <meta charset="UTF-8">
+
+    <!-- 6. -->
+    <title>select role</title> 
+
+    <!-- 7. -->
+    <link real="icon" herf="../assets/images/logo/Logo.png"> 
+
+    <!-- 8. -->
+    <link rel="stylesheet" href="./assets/css/index.css">
+    <link rel="stylesheet" href="./assets/css/style.css"> 
+
+    <!-- 9. -->
+    <script src="./js/util.js" defer></script>
+    <script src="./js/render.js" defer></script>
+    <script src="./js/components/header.js" defer></script>
+    <script src="./js/components/footer.js" defer></script>
+<head>
+
+    <!-- 10. -->
+<body>
+    <!-- 11. -->
+    <div class="container">
+        <!-- 12. -->
+        <div class="wrapped">
+            <!-- 13. -->
+            <div id="header"></div>
+
+            <!-- 14. -->
+            <main class="wrapped">
+                <!-- 15. -->
+                <h2>select your role<h2>
+                <!-- 16. -->
+                <button id="adminBtn" onclick="selectRole('Admin')">Admin</button>
+                <button id="doctorBtn" onclick="selectRole('Doctor')">Doctor</button>
+                <button id="patientBtn" onclick="selectRole('Patient')">Patient</button>
+            </main>
+
+            <!-- 17. -->
+            <div id="footer"></div>
+        </div>
+    </div>
+    <!-- 18. -->
+    <div id="modal" class="modal">
+        <span id="closeModal" class="close">&times;</span>
+        <div id="modal-body"></div>
+    </div>
+    <!-- 19. -->
+    <script type="module" src="../js/services/index.js" defer></script>
+    <!-- 20. -->
+</body>
+</html>
