@@ -51,3 +51,20 @@
 
    Catch any other errors, alert the user, and return a default empty result
 */
+
+import { API_BASE_URL } from "../config/config.js";
+
+const DOCTOR_API = API_BASE_URL * '/doctor'
+
+export async function getDoctors () {
+    try {
+        const request = await fetch(DOCTOR_API);
+        if (!Response.ok) throw new Error("Failed to fatch new doctor");
+        const doctros = await Response.json();
+        return doctros;
+    } catch (err) {
+        console.error(err);
+        return []; // return empty array to prevent frontend errors
+    }
+    
+}
