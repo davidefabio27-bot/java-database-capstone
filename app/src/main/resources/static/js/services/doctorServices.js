@@ -68,3 +68,51 @@ export async function getDoctors () {
     }
     
 }
+
+export async function deleteDoctor(id, token) {
+    try {
+        const response = await fetch(`${DOCTOR_API}/${id}`, {
+            method: "DELETE",
+            headers: { Authorization: `Bearer ${token}` }
+        });
+
+        const result = await response.json();
+        return { success: response.ok, message: result.message };
+    } catch (err) {
+        console.error(err);
+        return { success: false, message: "Failed to delete doctor" };
+    }
+}
+
+export async function saveDoctor(doctor, token) {
+    try {
+        const response = await fetch(DOCTOR_API, {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(doctor)
+        });
+
+        const result = await response.json();
+        return { success: response.ok, message: result.message };
+    } catch (err) {
+        console.error(err);
+        return { success: false, message: "Failed to save doctor" };
+    }
+}
+
+export async function filterDoctors(name = "", time = "", specialty = "") {
+    try {
+        const url = `${DOCTOR_API}/filter?name=${name}&time=${time}&specialty=${specialty}`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Failed to filter doctors");
+        const doctors = await response.json();
+        return doctors;
+    } catch (err) {
+        console.error(err);
+        return [];
+    }
+}
+
