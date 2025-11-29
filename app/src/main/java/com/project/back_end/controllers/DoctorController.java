@@ -1,6 +1,6 @@
 package com.project.back_end.controllers;
 
-
+@Restcontroller
 public class DoctorController {
 
 // 1. Set Up the Controller Class:
