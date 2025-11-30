@@ -1,5 +1,20 @@
 package com.project.back_end.controllers;
 
+import com.project.back_end.models.Prescription;
+import com.project.back_end.services.AppointmentService;
+import com.project.back_end.services.PrescriptionService;
+import com.project.back_end.services.Service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@RestController
+@RequestMapping("${api.path}" + "prescription")
 public class PrescriptionController {
     
 // 1. Set Up the Controller Class:
@@ -13,6 +28,19 @@ public class PrescriptionController {
 //    - Inject the shared `Service` class for token validation and role-based access control.
 //    - Inject `AppointmentService` to update appointment status after a prescription is issued.
 
+private final PrescriptionService prescriptionService;
+private final Service service;
+private final AppointmentService appointmentService;
+
+@Autowired
+public PrescriptionController(PrescriptionService prescriptionService,
+                                 Service service,
+                                 AppointmentService appointmentService) {
+        this.prescriptionService = prescriptionService;
+        this.service = service;
+        this.appointmentService = appointmentService;
+    }
+
 
 // 3. Define the `savePrescription` Method:
 //    - Handles HTTP POST requests to save a new prescription for a given appointment.
@@ -21,6 +49,32 @@ public class PrescriptionController {
 //    - If the token is valid, updates the status of the corresponding appointment to reflect that a prescription has been added.
 //    - Delegates the saving logic to `PrescriptionService` and returns a response indicating success or failure.
 
+@PostMapping("/{token}")
+    public ResponseEntity<?> savePrescription(@PathVariable String token,
+                                              @RequestBody Prescription prescription) {
+
+        Map<String, Object> response = new HashMap<>();
+
+        // Validate doctor token
+        if (!service.validateToken("doctor", token)) {
+            response.put("message", "Invalid or expired token");
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+        }
+
+        // Update appointment status
+        appointmentService.updateAppointmentStatus(prescription.getAppointmentId(), "Prescription Added");
+
+        // Save prescription
+        boolean saved = prescriptionService.savePrescription(prescription);
+
+        if (saved) {
+            response.put("message", "Prescription saved successfully");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+
+        response.put("message", "Internal server error");
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
 // 4. Define the `getPrescription` Method:
 //    - Handles HTTP GET requests to retrieve a prescription by its associated appointment ID.
@@ -29,5 +83,26 @@ public class PrescriptionController {
 //    - If the token is valid, fetches the prescription using the `PrescriptionService`.
 //    - Returns the prescription details or an appropriate error message if validation fails.
 
+@GetMapping("/{appointmentId}/{token}")
+    public ResponseEntity<?> getPrescription(@PathVariable int appointmentId,
+                                             @PathVariable String token) {
 
+        Map<String, Object> response = new HashMap<>();
+
+        // Validate doctor token
+        if (!service.validateToken("doctor", token)) {
+            response.put("message", "Invalid or expired token");
+            return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+        }
+
+        Prescription prescription = prescriptionService.getPrescription(appointmentId);
+
+        if (prescription == null) {
+            response.put("message", "No prescription found for this appointment");
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+
+        response.put("prescription", prescription);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }
