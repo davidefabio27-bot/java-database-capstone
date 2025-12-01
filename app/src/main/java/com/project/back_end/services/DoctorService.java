@@ -1,7 +1,7 @@
 package com.project.back_end.services;
 
 import com.project.back_end.models.Doctor;
-import com.project.back_end.models.Login;
+import com.project.back_end.dto.Login;
 import com.project.back_end.repositories.AppointmentRepository;
 import com.project.back_end.repositories.DoctorRepository;
 import com.project.back_end.services.TokenService;
