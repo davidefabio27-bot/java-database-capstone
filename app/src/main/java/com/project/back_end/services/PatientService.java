@@ -1,21 +1,20 @@
 package com.project.back_end.services;
 
 import com.project.back_end.dto.AppointmentDTO;
-import com.project.back_end.model.Appointment;
-import com.project.back_end.model.Patient;
+import com.project.back_end.models.Appointment;
+import com.project.back_end.models.Patient;
 import com.project.back_end.repo.AppointmentRepository;
 import com.project.back_end.repo.PatientRepository;
 import com.project.back_end.security.TokenService;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+
 
 @Service
 public class PatientService {
@@ -56,6 +55,15 @@ public int createPatient(Patient patient) {
     }
 }
 
+// Nuovo metodo per ottenere gli appuntamenti di un paziente tramite email
+public List<Appointment> getAppointmentsByEmail(String email) {
+    Patient patient = patientRepository.findByEmail(email);
+    if (patient == null) {
+        return null; // Nessun paziente trovato
+    }
+    return appointmentRepository.findByPatientId(patient.getId());
+}
+
 // 4. **getPatientAppointment Method**:
 //    - Retrieves a list of appointments for a specific patient, based on their ID.
 //    - The appointments are then converted into `AppointmentDTO` objects for easier consumption by the API client.
@@ -68,9 +76,9 @@ public ResponseEntity<Map<String, Object>> getPatientAppointment(Long id, String
 
     try {
         String email = tokenService.extractEmail(token);
-        Patiente patiente = patientRepository.findByEmail();
+        Patiente patiente = patientRepository.findByEmail(email);
 
-        if ( patiente == null || !patiente.getId().equals(id)( {
+        if ( patiente == null || !patiente.getId().equals(id)) {
             response.put ("error", "unauthorized");
             return ResponseEntity.status(401).body(response);
         }
@@ -96,7 +104,7 @@ public ResponseEntity<Map<String, Object>> getPatientAppointment(Long id, String
 //    - Converts the appointments into `AppointmentDTO` and returns them in the response.
 //    - Instruction: Ensure the method correctly handles "past" and "future" conditions, and that invalid conditions are caught and returned as errors.
 
-public ResponseEntity<Map<String, object>> filterByCondition(String condition, Long id) {
+public ResponseEntity<Map<String, Object>> filterByCondition(String condition, Long id) {
     Map<String, Object> response = new HashMap<>();
 
     int status;

@@ -1,6 +1,6 @@
 package com.project.back_end.services;
 
-import com.project.back_end.model.*;
+import com.project.back_end.models.*;
 import com.project.back_end.repo.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ private final PatientRepository patientRepository;
 private final DoctorService doctorService;
 private final PatientService patientService;
 
-public ServiceMain(TokenService tokenService,
+public Service(TokenService tokenService,
                        AdminRepository adminRepository,
                        DoctorRepository doctorRepository,
                        PatientRepository patientRepository,
@@ -45,7 +45,7 @@ public ServiceMain(TokenService tokenService,
 // unauthorized access to protected resources.
 
 public ResponseEntity<Map<String, String>> validateToken(String token, String user) {
-    Map<String string> response = new HashMap<>();
+    Map<String, String> response = new HashMap<>();
 
     if ( token == null || !tokenService.validateToken(token, user)) {
         response.put("message", "invalid or expired token");
@@ -105,7 +105,7 @@ public Map<String, Object> filterDoctor(String name, String specialty, String ti
     if (name == null && specialty == null && time == null) {
         doctors = doctorRepository.findAll();
     } else {
-        doctors = doctorService.filterDoctorsByNameSpecilityandTime(name, specialty, time);
+        doctors = doctorService.filterDoctorsByNameSpecialtyandTime(name, specialty, time);
     }
 
     response.put("doctors", doctors);
@@ -199,7 +199,7 @@ public ResponseEntity<Map<String, Object>> filterPatient(String condition, Strin
     Map<String, Object> response = new HashMap<>();
 
     try {
-        String email = tokenService.extractUsername(token);
+        String email = tokenService.extractEmail(token);
         List<Appointment> allAppointments = patientService.getAppointmentsByEmail(email);
 
         if (allAppointments == null) {

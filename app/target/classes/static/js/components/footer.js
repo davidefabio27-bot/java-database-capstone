@@ -102,3 +102,54 @@
   Call the renderFooter function to populate the footer in the page
 
 */
+
+// 1. Define the renderFooter function
+function renderFooter() {
+    // 2. Access the footer container
+    const footer = document.getElementById("footer");
+
+    // 3. Inject HTML content into the footer container
+    footer.innerHTML = `
+    <!-- 4. Footer wrapper -->
+    <footer class="footer">
+        <!-- 3. Footer container -->
+        <div class="footer-container">
+            <!-- 4. Hospital logo and copyright -->
+            <div class="footer-logo">
+                <img src="../assets/images/logo/logo.png" alt="Hospital CMS Logo">
+                <p>© Copyright 2025. All Rights Reserved by Hospital CMS.</p>
+            </div>
+
+            <!-- 5. Footer links section -->
+            <div class="footer-links">
+                <!-- 6. Company links -->
+                <div class="footer-column">
+                    <h4>Company</h4>
+                    <a href="#">About</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Press</a>
+                </div>
+
+                <!-- 7. Support links -->
+                <div class="footer-column">
+                    <h4>Support</h4>
+                    <a href="#">Account</a>
+                    <a href="#">Help Center</a>
+                    <a href="#">Contact Us</a>
+                </div>
+
+                <!-- 8. Legals links -->
+                <div class="footer-column">
+                    <h4>Legals</h4>
+                    <a href="#">Terms & Conditions</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Licensing</a>
+                </div>
+            </div> <!-- End of footer-links -->
+        </div> <!-- End of footer-container -->
+    </footer> <!-- End of footer -->
+    `;
+}
+
+// 11. Call renderFooter to inject the footer when the script loads
+renderFooter();

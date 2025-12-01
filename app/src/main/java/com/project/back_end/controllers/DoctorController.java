@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@Restcontroller
+@RestController
 @RequestMapping("${api.path}doctor")
 public class DoctorController {
 
@@ -30,7 +30,7 @@ public class DoctorController {
 
 // 2. AUTOWIRE DEPENDENCIES (constructor injection)
 @Autowired
-public DoctorService(DoctorService doctorService, Service service) {
+public DoctorController(DoctorService doctorService, Service service) {
     this.doctorService = doctorService;
     this.service = service;
 }
@@ -50,7 +50,7 @@ public ResponseEntity<?> getDoctorAvailability(
     @PathVariable String token) {
 
 //Token validation 
-    if (!service.validateToken(Token, user)) {
+    if (!service.validateToken(token, user)) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(Map.of("message", "Invalid or expired token"));
 }
@@ -76,10 +76,10 @@ public ResponseEntity<?> getDoctors() {
 @PostMapping("/{token}")
 public ResponseEntity<?> saveDoctor(
     @PathVariable String token,
-    @Requestbody Doctor doctor) {
+    @RequestBody Doctor doctor) {
 
         //Validate admin token
-        if (!service.validaTetoken(token, "admin")) {
+        if (!service.validateToken(token, "admin")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("message", "Unauthorized"));
         }
@@ -190,6 +190,4 @@ public ResponseEntity<?> filterDoctors(
             service.filterDoctor(name, time, speciality)
     );
 }
-}
-
 }

@@ -1,5 +1,21 @@
 package com.project.back_end.services;
 
+import com.project.back_end.models.Doctor;
+import com.project.back_end.models.Login;
+import com.project.back_end.repositories.AppointmentRepository;
+import com.project.back_end.repositories.DoctorRepository;
+import com.project.back_end.services.TokenService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Service
 public class DoctorService {
 

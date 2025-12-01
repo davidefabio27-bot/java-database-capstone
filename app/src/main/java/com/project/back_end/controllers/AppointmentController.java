@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@Restcontroller
+@RestController
 @RequestMapping("/appointments")
 public class AppointmentController {
 
@@ -29,7 +29,7 @@ private final Service service;
 @Autowired
 public AppointmentController(AppointmentService appointmentService, Service service) {
     this.appointmentservice = appointmentService;
-    this.Service = service;
+    this.service = service;
 }
 
 
@@ -47,7 +47,7 @@ public ResponseEntity<?> getAppointments(
     @PathVariable String token){
 
         //Validate doctor token
-        if (!service.validaToken( "token", doctor)) {
+        if (!service.validateToken( "doctor", token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(Map.of("message", "Invalid or expired token."));
        }
@@ -65,8 +65,8 @@ public ResponseEntity<?> getAppointments(
 
 @PostMapping("/{token}")
 public ResponseEntity<?> bookAppointment(
-    @PathVariable String token;
-    @Requestbody Appointment appointment) {
+    @PathVariable String token,
+    @RequestBody Appointment appointment) {
 
         //Validate patient token
         if (!service.validateToken(token, "patient")) {
@@ -94,7 +94,7 @@ public ResponseEntity<?> bookAppointment(
 @PutMapping("/{token}")
 public ResponseEntity<?> updateAppointment(
     @PathVariable String token,
-    @Requestbody Appointment appointment) {
+    @RequestBody Appointment appointment) {
 
         //Validate token
         if (!service.validateToken(token, "patient")) {
@@ -104,7 +104,6 @@ public ResponseEntity<?> updateAppointment(
         // Update appointment
         return appointmentService.updateAppointment(appointment);
     }
-ty
 
 // 6. Define the `cancelAppointment` Method:
 //    - Handles HTTP DELETE requests to cancel a specific appointment.
