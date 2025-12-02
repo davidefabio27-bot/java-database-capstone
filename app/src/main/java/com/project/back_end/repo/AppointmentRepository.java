@@ -1,6 +1,6 @@
 package com.project.back_end.repo;
 
-import com.project.back_end.model.Appointment;
+import com.project.back_end.models.Appointment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -75,7 +75,7 @@ void deleteAllByDoctorId(Long doctorId);
 //      - Return type: List<Appointment>
 //      - Parameters: Long patientId
 
-List<Appointment> findByPatientId(Long patientId);
+List<Appointment> findByPatient_Id(Long patientId);
 
 //    - **findByPatient_IdAndStatusOrderByAppointmentTimeAsc**:
 //      - This method retrieves all appointments for a specific patient with a given status, ordered by the appointment time.

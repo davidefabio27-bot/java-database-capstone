@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Servic
+@Service
 public class AppointmentService {
 // 1. **Add @Service Annotation**:
 //    - To indicate that this class is a service layer class for handling business logic.
@@ -27,7 +27,7 @@ public class AppointmentService {
 //    - These dependencies should be injected through the constructor.
 //    - Instruction: Ensure constructor injection is used for proper dependency management in Spring.
 
-private final AppointmentRepository appointmentRepositor;
+private final AppointmentRepository appointmentRepository;
 private final PatientRepository patientRepository;
 private final DoctorRepository doctorRepository;
 private final TokenService tokenService;

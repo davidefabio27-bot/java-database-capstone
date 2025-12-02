@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
 
-@Restcontroller
-@RequestMapping("/patiente")
+@RestController
+@RequestMapping("/patient")
 public class PatientController {
 
 // 1. Set Up the Controller Class:
@@ -44,7 +44,7 @@ public PatientController(PatientService patientService, Service service) {
     public ResponseEntity<?> getPatient(@PathVariable String token) {
         Map<String, Object> response = new HashMap<>();
 
-        if (!service.validateToken("patient", token)) {
+        if (!service.validateToken(token, "patient")) {
             response.put("message", "Invalid or expired token");
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
@@ -103,7 +103,7 @@ public PatientController(PatientService patientService, Service service) {
 
         Map<String, Object> response = new HashMap<>();
 
-        if (!service.validateToken("patient", token)) {
+        if (!service.validateToken(token, "patient")) {
             response.put("message", "Invalid or expired token");
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
@@ -125,7 +125,7 @@ public PatientController(PatientService patientService, Service service) {
 
         Map<String, Object> response = new HashMap<>();
 
-        if (!service.validateToken("patient", token)) {
+        if (!service.validateToken(token, "patient")) {
             response.put("message", "Invalid or expired token");
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
@@ -134,5 +134,3 @@ public PatientController(PatientService patientService, Service service) {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
-
-

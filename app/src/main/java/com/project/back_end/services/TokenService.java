@@ -73,7 +73,7 @@ public String generateToken(String identifier) {
 // - After verification, the token is parsed, and the subject (which represents the email) is extracted.
 // This method allows the application to retrieve the user's identity (email) from the token for further use.
 
-public String extractIdentifier(String token) {
+public String extractEmail(String token) {
     try {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
@@ -96,5 +96,20 @@ public String extractIdentifier(String token) {
 // - The method gracefully handles any errors by returning false if the token is invalid or an exception occurs.
 // This ensures secure access control based on the user's role and their existence in the system.
 
+ // Valida il token per un determinato tipo di utente
+    public boolean validateToken(String token, String userType) {
+        String email = extractEmail(token);
+        if (email == null) return false;
 
+        switch (userType.toLowerCase()) {
+            case "admin":
+                return adminRepository.findByUsername(email) != null;
+            case "doctor":
+                return doctorRepository.findByEmail(email) != null;
+            case "patient":
+                return patientRepository.findByEmail(email) != null;
+            default:
+                return false;
+        }
+    }
 }

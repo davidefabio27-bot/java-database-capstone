@@ -2,8 +2,8 @@ package com.project.back_end.services;
 
 import com.project.back_end.models.Doctor;
 import com.project.back_end.dto.Login;
-import com.project.back_end.repositories.AppointmentRepository;
-import com.project.back_end.repositories.DoctorRepository;
+import com.project.back_end.repo.AppointmentRepository;
+import com.project.back_end.repo.DoctorRepository;
 import com.project.back_end.services.TokenService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,7 +130,7 @@ public List<String> getDoctorAvailability(Long doctorId, LocalDate date) {
 //    - Instruction: Ensure proper filtering based on both the name and specialty as well as the specified time period.
 
 @Transactional
-    public Map<String, Object> filterDoctorsByNameSpecilityandTime(String name, String specialty, String amOrPm) {
+    public Map<String, Object> filterDoctorsByNameSpecialtyandTime(String name, String specialty, String amOrPm) {
         Map<String, Object> result = new HashMap<>();
         List<Doctor> doctors = doctorRepository.findByNameContainingIgnoreCaseAndSpecialtyIgnoreCase(name, specialty);
         result.put("doctors", filterDoctorByTime(doctors, amOrPm));

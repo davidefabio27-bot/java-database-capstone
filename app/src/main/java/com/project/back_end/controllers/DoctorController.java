@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -55,7 +56,8 @@ public ResponseEntity<?> getDoctorAvailability(
             .body(Map.of("message", "Invalid or expired token"));
 }
 
-    return doctorService.getDoctorAvailability(doctorId, date);
+    List<String> availability = doctorService.getDoctorAvailability(doctorId, date);
+    return ResponseEntity.ok(Map.of("availability", availability));
 }
 
 // 4. Define the `getDoctor` Method:

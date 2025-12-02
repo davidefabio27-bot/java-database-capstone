@@ -19,7 +19,7 @@ public class AppointmentController {
 //    - Use `@RequestMapping("/appointments")` to set a base path for all appointment-related endpoints.
 //    - This centralizes all routes that deal with booking, updating, retrieving, and canceling appointments.
 
-private final AppointmentService appointmentservice;
+private final AppointmentService appointmentService;
 private final Service service;
 
 // 2. Autowire Dependencies:
@@ -28,7 +28,7 @@ private final Service service;
 
 @Autowired
 public AppointmentController(AppointmentService appointmentService, Service service) {
-    this.appointmentservice = appointmentService;
+    this.appointmentService = appointmentService;
     this.service = service;
 }
 
@@ -47,7 +47,7 @@ public ResponseEntity<?> getAppointments(
     @PathVariable String token){
 
         //Validate doctor token
-        if (!service.validateToken( "doctor", token)) {
+        if (!service.validateToken(token, "doctor")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(Map.of("message", "Invalid or expired token."));
        }
@@ -74,14 +74,16 @@ public ResponseEntity<?> bookAppointment(
                 .body(Map.of("message", "Invalid or expired token."));
         }
 
-        //Validate patient details 
-        Map<String, String> validationResponse = service.validateAppointment(appointment);
-        if (!validationResponse.get("status").equals("valid")) {
-            return ResponseEntity.badRequest().body(validationResponse);
+        //Validate appointment availability
+        int status = service.validateAppointment(appointment);
+        if (status == -1) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Doctor not found"));
+        } else if (status == 0) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Appointment time not available"));
         }
 
-        //validate appointment
-        return appointmentservice.bookAppointment((appointment));  
+        //Book appointment
+        return appointmentService.bookAppointment(appointment);  
     }
 
 // 5. Define the `updateAppointment` Method:
@@ -100,7 +102,8 @@ public ResponseEntity<?> updateAppointment(
         if (!service.validateToken(token, "patient")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("message", "Invalid or expired token."));
-    }
+        }
+
         // Update appointment
         return appointmentService.updateAppointment(appointment);
     }
@@ -112,17 +115,17 @@ public ResponseEntity<?> updateAppointment(
 //    - Calls `AppointmentService` to handle the cancellation process and returns the result.
 
 @DeleteMapping("/{id}/{token}")
-    public ResponseEntity<?> cancelAppointment(
-            @PathVariable Long id,
-            @PathVariable String token) {
+public ResponseEntity<?> cancelAppointment(
+        @PathVariable Long id,
+        @PathVariable String token) {
 
-        // Validate patient token
-        if (!service.validateToken(token, "patient")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("message", "Invalid or expired token."));
-        }
-
-        // Cancel the appointment
-        return appointmentService.cancelAppointment(id);
+    // Validate patient token
+    if (!service.validateToken(token, "patient")) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("message", "Invalid or expired token."));
     }
+
+    // Cancel the appointment
+    return appointmentService.cancelAppointment(id);
+}
 }

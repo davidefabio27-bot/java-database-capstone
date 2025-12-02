@@ -132,7 +132,7 @@ public int validateAppointment(Appointment appointment) {
 
     Doctor doctor = doctorOpt.get();
 
-    List<String> availability = doctorService.getDoctorAvailability(doctor, appointment.getDate());
+    List<String> availability = doctorService.getDoctorAvailability(doctor.getId(), appointment.getDate());
 
     if (availability.contains(appointment.getTime())) {
         return 1; // valid
