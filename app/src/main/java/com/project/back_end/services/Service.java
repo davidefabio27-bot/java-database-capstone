@@ -1,5 +1,6 @@
 package com.project.back_end.services;
 
+import com.project.back_end.dto.Login;
 import com.project.back_end.models.*;
 import com.project.back_end.repo.*;
 import org.springframework.http.HttpStatus;
@@ -44,10 +45,10 @@ public Service(TokenService tokenService,
 // If the token is invalid or expired, it returns a 401 Unauthorized response with an appropriate error message. This ensures security by preventing
 // unauthorized access to protected resources.
 
-public ResponseEntity<Map<String, String>> validateToken(String token, String user) {
+public ResponseEntity<Map<String, String>> validateToken(String token, String userType) {
     Map<String, String> response = new HashMap<>();
 
-    if ( token == null || !tokenService.validateToken(token, user)) {
+    if ( token == null || !tokenService.validateToken(token, userType)) {
         response.put("message", "invalid or expired token");
         return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
     }
@@ -124,21 +125,27 @@ public Map<String, Object> filterDoctor(String name, String specialty, String ti
 
 public int validateAppointment(Appointment appointment) {
 
-    Optional<Doctor> doctorOpt = doctorRepository.findById(appointment.getDoctorId());
+    // Prende l'id del dottore dall'oggetto Doctor dentro Appointment
+    Optional<Doctor> doctorOpt = doctorRepository.findById(appointment.getDoctor().getId());
 
     if (doctorOpt.isEmpty()) {
-        return -1; // doctor does not exist
+        return -1; // il dottore non esiste
     }
 
     Doctor doctor = doctorOpt.get();
 
-    List<String> availability = doctorService.getDoctorAvailability(doctor.getId(), appointment.getDate());
+    // Recupera gli slot disponibili del dottore per la data dell'appuntamento
+    List<String> availability = doctorService.getDoctorAvailability(
+            doctor.getId(),
+            appointment.getAppointmentDate()
+    );
 
-    if (availability.contains(appointment.getTime())) {
-        return 1; // valid
+    // Confronta l'orario richiesto (LocalTime) con gli slot disponibili
+    if (availability.contains(appointment.getAppointmentTimeOnly().toString())) {
+        return 1; // tempo valido
     }
 
-    return 0; // not available
+    return 0; // non disponibile
 }
 
 // 7. **validatePatient Method**
@@ -207,17 +214,10 @@ public ResponseEntity<Map<String, Object>> filterPatient(String condition, Strin
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
 
-        List<Appointment> filtered;
-
-        if (condition != null && name != null) {
-            filtered = patientService.filterByDoctorAndCondition(allAppointments, name, condition);
-        } else if (condition != null) {
-            filtered = patientService.filterByCondition(allAppointments, condition);
-        } else if (name != null) {
-            filtered = patientService.filterByDoctor(allAppointments, name);
-        } else {
-            filtered = allAppointments; // no filter
-        }
+        List<Appointment> filtered = allAppointments.stream()
+                .filter(a -> condition == null || String.valueOf(a.getStatus()).equals(condition))
+                .filter(a -> name == null || a.getDoctor().getName().equalsIgnoreCase(name))
+                .toList();
 
         response.put("appointments", filtered);
         return new ResponseEntity<>(response, HttpStatus.OK);
