@@ -45,15 +45,16 @@ public Service(TokenService tokenService,
 // If the token is invalid or expired, it returns a 401 Unauthorized response with an appropriate error message. This ensures security by preventing
 // unauthorized access to protected resources.
 
-public ResponseEntity<Map<String, String>> validateToken(String token, String userType) {
-    Map<String, String> response = new HashMap<>();
+public Map<String, Object> validateToken(String token, String userType) {
+    Map<String, Object> response = new HashMap<>();
 
-    if ( token == null || !tokenService.validateToken(token, userType)) {
+    if (token == null || !tokenService.validateToken(token, userType)) {
         response.put("message", "invalid or expired token");
-        return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
+        return response; // error
     }
-    response.put("message", "Token is valid");
-        return new ResponseEntity<>(response, HttpStatus.OK);
+
+    // Valid → empty map exactly as controller expects
+    return response;
 }
 
 // 4. **validateAdmin Method**
