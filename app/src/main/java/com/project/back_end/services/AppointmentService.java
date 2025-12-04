@@ -17,13 +17,13 @@ import java.util.Map;
 
 @Service
 public class AppointmentService {
-// 1. **Add @Service Annotation**:
+// 1. **Add @AppService Annotation**:
 //    - To indicate that this class is a service layer class for handling business logic.
-//    - The `@Service` annotation should be added before the class declaration to mark it as a Spring service component.
-//    - Instruction: Add `@Service` above the class definition.
+//    - The `@AppService` annotation should be added before the class declaration to mark it as a Spring service component.
+//    - Instruction: Add `@AppService` above the class definition.
 
 // 2. **Constructor Injection for Dependencies**:
-//    - The `AppointmentService` class requires several dependencies like `AppointmentRepository`, `Service`, `TokenService`, `PatientRepository`, and `DoctorRepository`.
+//    - The `AppointmentService` class requires several dependencies like `AppointmentRepository`, `AppService`, `TokenService`, `PatientRepository`, and `DoctorRepository`.
 //    - These dependencies should be injected through the constructor.
 //    - Instruction: Ensure constructor injection is used for proper dependency management in Spring.
 

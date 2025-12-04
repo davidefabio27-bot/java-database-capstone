@@ -12,10 +12,10 @@ import java.util.Map;
 @Service
 public class PrescriptionService {
     
- // 1. **Add @Service Annotation**:
- //    - The `@Service` annotation marks this class as a Spring service component, allowing Spring's container to manage it.
+ // 1. **Add @AppService Annotation**:
+ //    - The `@AppService` annotation marks this class as a Spring service component, allowing Spring's container to manage it.
  //    - This class contains the business logic related to managing prescriptions in the healthcare system.
- //    - Instruction: Ensure the `@Service` annotation is applied to mark this class as a Spring-managed service.
+ //    - Instruction: Ensure the `@AppService` annotation is applied to mark this class as a Spring-managed service.
 
  // 2. **Constructor Injection for Dependencies**:
  //    - The `PrescriptionService` class depends on the `PrescriptionRepository` to interact with the database.

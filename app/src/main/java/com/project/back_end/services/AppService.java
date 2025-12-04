@@ -1,5 +1,6 @@
 package com.project.back_end.services;
 
+import java.time.format.DateTimeFormatter;
 import com.project.back_end.dto.Login;
 import com.project.back_end.models.*;
 import com.project.back_end.repo.*;
@@ -10,9 +11,9 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-public class Service {
-// 1. **@Service Annotation**
-// The @Service annotation marks this class as a service component in Spring. This allows Spring to automatically detect it through component scanning
+public class AppService {
+// 1. **@AppService Annotation**
+// The @AppService annotation marks this class as a service component in Spring. This allows Spring to automatically detect it through component scanning
 // and manage its lifecycle, enabling it to be injected into controllers or other services using @Autowired or constructor injection.
 
 // 2. **Constructor Injection for Dependencies**
@@ -26,7 +27,7 @@ private final PatientRepository patientRepository;
 private final DoctorService doctorService;
 private final PatientService patientService;
 
-public Service(TokenService tokenService,
+public AppService(TokenService tokenService,
                        AdminRepository adminRepository,
                        DoctorRepository doctorRepository,
                        PatientRepository patientRepository,
@@ -136,10 +137,11 @@ public int validateAppointment(Appointment appointment) {
     Doctor doctor = doctorOpt.get();
 
     // Recupera gli slot disponibili del dottore per la data dell'appuntamento
-    List<String> availability = doctorService.getDoctorAvailability(
-            doctor.getId(),
-            appointment.getAppointmentDate()
-    );
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+List<String> availability = doctorService.getDoctorAvailability(
+        doctor.getId(),
+        appointment.getAppointmentDate().format(formatter)
+);
 
     // Confronta l'orario richiesto (LocalTime) con gli slot disponibili
     if (availability.contains(appointment.getAppointmentTimeOnly().toString())) {

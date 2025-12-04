@@ -17,8 +17,8 @@ import java.util.Map;
 
 @Service
 public class PatientService {
-    // 1. **Add @Service Annotation**:
-    //    - The `@Service` annotation is used to mark this class as a Spring service component. 
+    // 1. **Add @AppService Annotation**:
+    //    - The `@AppService` annotation is used to mark this class as a Spring service component. 
     //    - It will be managed by Spring's container and used for business logic related to patients and appointments.
 
     // 2. **Constructor Injection for Dependencies**:

@@ -19,9 +19,9 @@
 /home/project/java-database-capstone/app/src/main/java/com/project/back_end/repo/DoctorRepository.java
 /home/project/java-database-capstone/app/src/main/java/com/project/back_end/repo/PatientRepository.java
 /home/project/java-database-capstone/app/src/main/java/com/project/back_end/repo/PrescriptionRepository.java
+/home/project/java-database-capstone/app/src/main/java/com/project/back_end/services/AppService.java
 /home/project/java-database-capstone/app/src/main/java/com/project/back_end/services/AppointmentService.java
 /home/project/java-database-capstone/app/src/main/java/com/project/back_end/services/DoctorService.java
 /home/project/java-database-capstone/app/src/main/java/com/project/back_end/services/PatientService.java
 /home/project/java-database-capstone/app/src/main/java/com/project/back_end/services/PrescriptionService.java
-/home/project/java-database-capstone/app/src/main/java/com/project/back_end/services/Service.java
 /home/project/java-database-capstone/app/src/main/java/com/project/back_end/services/TokenService.java

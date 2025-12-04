@@ -3,7 +3,7 @@ package com.project.back_end.controllers;
 import com.project.back_end.models.Prescription;
 import com.project.back_end.services.AppointmentService;
 import com.project.back_end.services.PrescriptionService;
-import com.project.back_end.services.Service;
+import com.project.back_end.services.AppService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,19 +25,19 @@ public class PrescriptionController {
 
 // 2. Autowire Dependencies:
 //    - Inject `PrescriptionService` to handle logic related to saving and fetching prescriptions.
-//    - Inject the shared `Service` class for token validation and role-based access control.
+//    - Inject the shared `AppService` class for token validation and role-based access control.
 //    - Inject `AppointmentService` to update appointment status after a prescription is issued.
 
 private final PrescriptionService prescriptionService;
-private final Service service;
+private final AppService appService;
 private final AppointmentService appointmentService;
 
 @Autowired
 public PrescriptionController(PrescriptionService prescriptionService,
-                                 Service service,
+                                 AppService service,
                                  AppointmentService appointmentService) {
         this.prescriptionService = prescriptionService;
-        this.service = service;
+        this.appService = appService;
         this.appointmentService = appointmentService;
     }
 
@@ -56,7 +56,7 @@ public PrescriptionController(PrescriptionService prescriptionService,
         Map<String, Object> response = new HashMap<>();
 
         // Validate doctor token
-        if (!service.validateToken("doctor", token)) {
+        if (!appService.validateToken("doctor", token)) {
             response.put("message", "Invalid or expired token");
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
@@ -90,7 +90,7 @@ public PrescriptionController(PrescriptionService prescriptionService,
         Map<String, Object> response = new HashMap<>();
 
         // Validate doctor token
-        if (!service.validateToken("doctor", token)) {
+        if (!app.validateToken("doctor", token)) {
             response.put("message", "Invalid or expired token");
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }

@@ -3,7 +3,7 @@ package com.project.back_end.controllers;
 import com.project.back_end.dto.Login;
 import com.project.back_end.models.Patient;
 import com.project.back_end.services.PatientService;
-import com.project.back_end.services.Service;
+import com.project.back_end.services.AppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,15 +24,15 @@ public class PatientController {
 
 // 2. Autowire Dependencies:
 //    - Inject `PatientService` to handle patient-specific logic such as creation, retrieval, and appointments.
-//    - Inject the shared `Service` class for tasks like token validation and login authentication.
+//    - Inject the shared `AppService` class for tasks like token validation and login authentication.
 
 private final PatientService patientService;
-private final Service service;
+private final AppService appService;
 
 @Autowired
-public PatientController(PatientService patientService, Service service) {
+public PatientController(PatientService patientService, AppService appService) {
         this.patientService = patientService;
-        this.service = service;
+        this.appService = appService;
     }
 
 // 3. Define the `getPatient` Method:
@@ -44,7 +44,7 @@ public PatientController(PatientService patientService, Service service) {
     public ResponseEntity<?> getPatient(@PathVariable String token) {
         Map<String, Object> response = new HashMap<>();
 
-        if (!service.validateToken(token, "patient")) {
+        if (!appService.validateToken(token, "patient")) {
             response.put("message", "Invalid or expired token");
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
@@ -64,7 +64,7 @@ public PatientController(PatientService patientService, Service service) {
     public ResponseEntity<?> createPatient(@RequestBody Patient patient) {
         Map<String, Object> response = new HashMap<>();
 
-        if (service.patientExists(patient.getEmail(), patient.getPhoneNo())) {
+        if (appService.patientExists(patient.getEmail(), patient.getPhoneNo())) {
             response.put("message", "Patient with email id or phone no already exist");
             return new ResponseEntity<>(response, HttpStatus.CONFLICT);
         }
@@ -88,7 +88,7 @@ public PatientController(PatientService patientService, Service service) {
 
 @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Login login) {
-        return new ResponseEntity<>(service.validatePatientLogin(login), HttpStatus.OK);
+        return new ResponseEntity<>(appService.validatePatientLogin(login), HttpStatus.OK);
     }
 
 // 6. Define the `getPatientAppointment` Method:
@@ -103,7 +103,7 @@ public PatientController(PatientService patientService, Service service) {
 
         Map<String, Object> response = new HashMap<>();
 
-        if (!service.validateToken(token, "patient")) {
+        if (!appService.validateToken(token, "patient")) {
             response.put("message", "Invalid or expired token");
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
@@ -125,7 +125,7 @@ public PatientController(PatientService patientService, Service service) {
 
         Map<String, Object> response = new HashMap<>();
 
-        if (!service.validateToken(token, "patient")) {
+        if (!appService.validateToken(token, "patient")) {
             response.put("message", "Invalid or expired token");
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }

@@ -2,7 +2,7 @@ package com.project.back_end.controllers;
 
 import com.project.back_end.models.Appointment;
 import com.project.back_end.services.AppointmentService;
-import com.project.back_end.services.Service;
+import com.project.back_end.services.AppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,23 +20,23 @@ public class AppointmentController {
 //    - This centralizes all routes that deal with booking, updating, retrieving, and canceling appointments.
 
 private final AppointmentService appointmentService;
-private final Service service;
+private final AppService appService;
 
 // 2. Autowire Dependencies:
 //    - Inject `AppointmentService` for handling the business logic specific to appointments.
-//    - Inject the general `Service` class, which provides shared functionality like token validation and appointment checks.
+//    - Inject the general `AppService` class, which provides shared functionality like token validation and appointment checks.
 
 @Autowired
-public AppointmentController(AppointmentService appointmentService, Service service) {
+public AppointmentController(AppointmentService appointmentService, AppService appService) {
     this.appointmentService = appointmentService;
-    this.service = service;
+    this.appService = appService;
 }
 
 
 // 3. Define the `getAppointments` Method:
 //    - Handles HTTP GET requests to fetch appointments based on date and patient name.
 //    - Takes the appointment date, patient name, and token as path variables.
-//    - First validates the token for role `"doctor"` using the `Service`.
+//    - First validates the token for role `"doctor"` using the `AppService`.
 //    - If the token is valid, returns appointments for the given patient on the specified date.
 //    - If the token is invalid or expired, responds with the appropriate message and status code.
 
@@ -47,7 +47,7 @@ public ResponseEntity<?> getAppointments(
     @PathVariable String token){
 
         //Validate doctor token
-        if (!service.validateToken(token, "doctor")) {
+        if (!appService.validateToken(token, "doctor")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(Map.of("message", "Invalid or expired token."));
        }
@@ -69,13 +69,13 @@ public ResponseEntity<?> bookAppointment(
     @RequestBody Appointment appointment) {
 
         //Validate patient token
-        if (!service.validateToken(token, "patient")) {
+        if (!appService.validateToken(token, "patient")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("message", "Invalid or expired token."));
         }
 
         //Validate appointment availability
-        int status = service.validateAppointment(appointment);
+        int status = appService.validateAppointment(appointment);
         if (status == -1) {
             return ResponseEntity.badRequest().body(Map.of("message", "Doctor not found"));
         } else if (status == 0) {
@@ -99,7 +99,7 @@ public ResponseEntity<?> updateAppointment(
     @RequestBody Appointment appointment) {
 
         //Validate token
-        if (!service.validateToken(token, "patient")) {
+        if (!appService.validateToken(token, "patient")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("message", "Invalid or expired token."));
         }
@@ -120,7 +120,7 @@ public ResponseEntity<?> cancelAppointment(
         @PathVariable String token) {
 
     // Validate patient token
-    if (!service.validateToken(token, "patient")) {
+    if (!app.validateToken(token, "patient")) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("message", "Invalid or expired token."));
     }

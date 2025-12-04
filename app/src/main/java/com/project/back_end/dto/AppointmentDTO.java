@@ -147,7 +147,9 @@ private final LocalDateTime endTime;
         this.appointmentDate = appointmentTime.toLocalDate();
         this.appointmentTimeOnly = appointmentTime.toLocalTime();
         this.endTime = appointmentTime.plusHours(1);
-    }
+     }
+
+
 // 15. Getters:
 //    - Standard getter methods are provided for all fields: id, doctorId, doctorName, patientId, patientName, patientEmail, patientPhone, patientAddress, appointmentTime, status, appointmentDate, appointmentTimeOnly, and endTime.
 //    - These methods allow access to the values of the fields in the AppointmentDTO object.

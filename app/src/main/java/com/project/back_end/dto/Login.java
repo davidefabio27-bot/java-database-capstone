@@ -8,7 +8,7 @@ public class Login {
 //      - Represents the email address used for logging into the system.
 //      - The email field is expected to contain a valid email address for user authentication purposes.
 
- private String identifier;
+ private String email;
 
 // 2. 'password' field:
 //    - Type: private String
@@ -34,12 +34,12 @@ public class Login {
 //    - The 'getPassword()' method allows access to the password value.
 //    - The 'setPassword(String password)' method sets the password value.
 
-public String getIdentifier() {
-        return identifier;
+public String getEmail() {
+        return email;
     }
 
-    public void setIdentifier(String identifier) {
-        this.identifier = identifier;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
