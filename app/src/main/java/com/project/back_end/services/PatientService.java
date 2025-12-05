@@ -83,8 +83,20 @@ public class PatientService {
 
             List<Appointment> appointments = appointmentRepository.findByPatient_Id(id);
             List<AppointmentDTO> dtos = appointments.stream()
-                    .map(AppointmentDTO::new)
+                    .map(a -> new AppointmentDTO(
+                            a.getId(),
+                            a.getDoctor().getId(),
+                            a.getDoctor().getName(),
+                            a.getPatient().getId(),
+                            a.getPatient().getName(),
+                            a.getPatient().getEmail(),
+                            a.getPatient().getPhone(),
+                            a.getPatient().getAddress(),
+                            a.getAppointmentTime(),
+                            a.getStatus()
+                    ))
                     .toList();
+                    
 
             response.put("appointments", dtos);
             return ResponseEntity.ok(response);
@@ -128,8 +140,19 @@ public class PatientService {
             List<AppointmentDTO> dtos = appointmentRepository
                     .findByPatient_IdAndStatusOrderByAppointmentTimeAsc(patientId, status)
                     .stream()
-                    .map(AppointmentDTO::new)
-                    .toList();
+                    .map(a -> new AppointmentDTO(
+                                a.getId(),
+                                a.getDoctor().getId(),
+                                a.getDoctor().getName(),
+                                a.getPatient().getId(),
+                                a.getPatient().getName(),
+                                a.getPatient().getEmail(),
+                                a.getPatient().getPhone(),
+                                a.getPatient().getAddress(),
+                                a.getAppointmentTime(),
+                                a.getStatus()
+                        ))
+                        .toList();
 
             response.put("appointments", dtos);
             return ResponseEntity.ok(response);
@@ -164,8 +187,19 @@ public class PatientService {
             List<AppointmentDTO> dtos = appointmentRepository
                     .filterByDoctorNameAndPatientId(name, patientId)
                     .stream()
-                    .map(AppointmentDTO::new)
-                    .toList();
+                    .map(a -> new AppointmentDTO(
+                                a.getId(),
+                                a.getDoctor().getId(),
+                                a.getDoctor().getName(),
+                                a.getPatient().getId(),
+                                a.getPatient().getName(),
+                                a.getPatient().getEmail(),
+                                a.getPatient().getPhone(),
+                                a.getPatient().getAddress(),
+                                a.getAppointmentTime(),
+                                a.getStatus()
+                        ))
+                        .toList();
 
             response.put("appointments", dtos);
             return ResponseEntity.ok(response);
@@ -209,8 +243,19 @@ public class PatientService {
             List<AppointmentDTO> dtos = appointmentRepository
                     .filterByDoctorNameAndPatientIdAndStatus(name, patientId, status)
                     .stream()
-                    .map(AppointmentDTO::new)
-                    .toList();
+                    .map(a -> new AppointmentDTO(
+                                a.getId(),
+                                a.getDoctor().getId(),
+                                a.getDoctor().getName(),
+                                a.getPatient().getId(),
+                                a.getPatient().getName(),
+                                a.getPatient().getEmail(),
+                                a.getPatient().getPhone(),
+                                a.getPatient().getAddress(),
+                                a.getAppointmentTime(),
+                                a.getStatus()
+                        ))
+                        .toList();
 
             response.put("appointments", dtos);
             return ResponseEntity.ok(response);
