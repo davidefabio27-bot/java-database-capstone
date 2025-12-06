@@ -48,10 +48,11 @@ public class DoctorController {
             @PathVariable String token) {
 
         // Token validation
-        if (!appService.validateToken(token, user)) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("message", "Invalid or expired token"));
-        }
+        Map<String, Object> tokenCheck = appService.validateToken(token, "doctor");
+        if (!Boolean.TRUE.equals(tokenCheck.get("valid"))) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("message", "Invalid or expired token."));
+}
 
         List<String> availability = doctorService.getDoctorAvailability(doctorId, date);
         return ResponseEntity.ok(Map.of("availability", availability));
@@ -78,10 +79,11 @@ public class DoctorController {
             @RequestBody Doctor doctor) {
 
         // Validate admin token
-        if (!appService.validateToken(token, "admin")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("message", "Unauthorized"));
-        }
+        Map<String, Object> tokenCheck = appService.validateToken(token, "admin");
+        if (!Boolean.TRUE.equals(tokenCheck.get("valid"))) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("message", "Invalid or expired token."));
+}
 
         String result = doctorService.saveDoctor(doctor);
 
@@ -120,10 +122,11 @@ public class DoctorController {
             @RequestBody Doctor doctor) {
 
         // Validate admin token
-        if (!appService.validateToken(token, "admin")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("message", "Unauthorized"));
-        }
+       Map<String, Object> tokenCheck = appService.validateToken(token, "admin");
+        if (!Boolean.TRUE.equals(tokenCheck.get("valid"))) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+             .body(Map.of("message", "Invalid or expired token."));
+}
 
         String result = doctorService.updateDoctor(doctor);
 
@@ -150,10 +153,11 @@ public class DoctorController {
             @PathVariable String token) {
 
         // Validate admin token
-        if (!appService.validateToken(token, "admin")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("message", "Unauthorized"));
-        }
+        Map<String, Object> tokenCheck = appService.validateToken(token, "doctor and admin");
+        if (!Boolean.TRUE.equals(tokenCheck.get("valid"))) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(Map.of("message", "Invalid or expired token."));
+}
 
         String result = doctorService.deleteDoctor(id);
 

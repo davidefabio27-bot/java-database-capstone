@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.project.back_end.models.Doctor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -31,16 +32,19 @@ private final AppointmentRepository appointmentRepository;
 private final PatientRepository patientRepository;
 private final DoctorRepository doctorRepository;
 private final TokenService tokenService;
+private final AppService appService;
 
 @Autowired
 public AppointmentService(AppointmentRepository appointmentRepository,
                           PatientRepository patientRepository,
                           DoctorRepository doctorRepository,
-                          TokenService tokenService) {
+                          TokenService tokenService,
+                          AppService appService) {
     this.appointmentRepository = appointmentRepository;
     this.patientRepository = patientRepository;
     this.doctorRepository = doctorRepository;
     this.tokenService = tokenService;
+    this.appService = appService;
 }
 
 // 3. **Add @Transactional Annotation for Methods that Modify Database**:
@@ -113,8 +117,14 @@ public int bookAppointment(Appointment appointment) {
 @Transactional
 public Map<String, Object> getAppointments(String pname, LocalDate date, String token) {
     Map<String, Object> result = new HashMap<>();
-    // Example: retrieve doctor ID from token
-    Long doctorId = tokenService.getDoctorIdFromToken(token);
+
+    // Ottieni l'email dal token direttamente dal TokenService
+    String email = tokenService.extractEmail(token);
+
+    // Recupera il dottore usando il repository direttamente
+    Doctor doctor = doctorRepository.findByEmail(email);
+
+    Long doctorId = doctor != null ? doctor.getId() : null;
 
     LocalDateTime start = date.atStartOfDay();
     LocalDateTime end = date.plusDays(1).atStartOfDay();
@@ -123,9 +133,9 @@ public Map<String, Object> getAppointments(String pname, LocalDate date, String 
             .findByDoctorIdAndAppointmentTimeBetween(doctorId, start, end);
 
     // filter by patient name if provided
-    if (pname != null && !pname.isEmpty()) {
-        appointments.removeIf(a -> !a.getPatientName().toLowerCase().contains(pname.toLowerCase()));
-    }
+if (pname != null && !pname.isEmpty()) {
+    appointments.removeIf(a -> !a.getPatient().getName().toLowerCase().contains(pname.toLowerCase()));
+}
 
     result.put("appointments", appointments);
     return result;
@@ -137,10 +147,11 @@ public Map<String, Object> getAppointments(String pname, LocalDate date, String 
 //    - Instruction: Add `@Transactional` before this method to ensure atomicity when updating appointment status.
 
 @Transactional
-    public void changeStatus(int status, long id) {
-        appointmentRepository.findById(id).ifPresent(appointment -> {
-            appointment.setStatus(status);
-            appointmentRepository.save(appointment);
-        });
-    }
+public boolean changeStatus(int status, long id) {
+    return appointmentRepository.findById(id).map(appointment -> {
+        appointment.setStatus(status);
+        appointmentRepository.save(appointment);
+        return true;
+    }).orElse(false);
+}
 }

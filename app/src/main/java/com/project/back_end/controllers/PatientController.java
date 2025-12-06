@@ -20,12 +20,6 @@ public class PatientController {
 //    - Annotate the class with `@RestController` to define it as a REST API controller for patient-related operations.
 //    - Use `@RequestMapping("/patient")` to prefix all endpoints with `/patient`, grouping all patient functionalities under a common route.
 
-
-
-// 2. Autowire Dependencies:
-//    - Inject `PatientService` to handle patient-specific logic such as creation, retrieval, and appointments.
-//    - Inject the shared `AppService` class for tasks like token validation and login authentication.
-
 private final PatientService patientService;
 private final AppService appService;
 
@@ -42,16 +36,12 @@ public PatientController(PatientService patientService, AppService appService) {
 
 @GetMapping("/{token}")
     public ResponseEntity<?> getPatient(@PathVariable String token) {
-        Map<String, Object> response = new HashMap<>();
-
-        if (!appService.validateToken(token, "patient")) {
-            response.put("message", "Invalid or expired token");
+        Map<String, Object> response = appService.validateToken(token, "patient");
+        if (response.containsKey("message")) { // token non valido
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
 
-        Patient patient = patientService.getPatientDetails(token);
-        response.put("patient", patient);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return patientService.getPatientDetails(token);
     }
 
 // 4. Define the `createPatient` Method:
@@ -60,18 +50,18 @@ public PatientController(PatientService patientService, AppService appService) {
 //    - First checks if the patient already exists using the shared service.
 //    - If validation passes, attempts to create the patient and returns success or error messages based on the outcome.
 
- @PostMapping
+@PostMapping
     public ResponseEntity<?> createPatient(@RequestBody Patient patient) {
         Map<String, Object> response = new HashMap<>();
 
-        if (appService.patientExists(patient.getEmail(), patient.getPhoneNo())) {
+        if (!appService.validatePatient(patient)) {
             response.put("message", "Patient with email id or phone no already exist");
             return new ResponseEntity<>(response, HttpStatus.CONFLICT);
         }
 
-        boolean created = patientService.createPatient(patient);
+        int created = patientService.createPatient(patient);
 
-        if (created) {
+        if (created == 1) {
             response.put("message", "Signup successful");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
@@ -88,28 +78,25 @@ public PatientController(PatientService patientService, AppService appService) {
 
 @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Login login) {
-        return new ResponseEntity<>(appService.validatePatientLogin(login), HttpStatus.OK);
+        return appService.validatePatientLogin(login);
     }
 
 // 6. Define the `getPatientAppointment` Method:
 //    - Handles HTTP GET requests to fetch appointment details for a specific patient.
-//    - Requires the patient ID, token, and user role as path variables.
+//    - Requires the patient ID and token as path variables.
 //    - Validates the token using the shared service.
 //    - If valid, retrieves the patient's appointment data from `PatientService`; otherwise, returns a validation error.
 
- @GetMapping("/{id}/{token}")
-    public ResponseEntity<?> getPatientAppointments(@PathVariable int id,
+@GetMapping("/{id}/{token}")
+    public ResponseEntity<?> getPatientAppointments(@PathVariable Long id,
                                                     @PathVariable String token) {
 
-        Map<String, Object> response = new HashMap<>();
-
-        if (!appService.validateToken(token, "patient")) {
-            response.put("message", "Invalid or expired token");
+        Map<String, Object> response = appService.validateToken(token, "patient");
+        if (response.containsKey("message")) {
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
 
-        response.put("appointments", patientService.getPatientAppointment(id));
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return patientService.getPatientAppointment(id, token);
     }
 
 // 7. Define the `filterPatientAppointment` Method:
@@ -123,14 +110,11 @@ public PatientController(PatientService patientService, AppService appService) {
                                                       @PathVariable String name,
                                                       @PathVariable String token) {
 
-        Map<String, Object> response = new HashMap<>();
-
-        if (!appService.validateToken(token, "patient")) {
-            response.put("message", "Invalid or expired token");
+        Map<String, Object> response = appService.validateToken(token, "patient");
+        if (response.containsKey("message")) {
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
 
-        response.put("appointments", service.filterPatient(condition, name));
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return appService.filterPatient(condition, name, token);
     }
 }

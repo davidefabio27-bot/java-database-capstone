@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 @RestController
@@ -46,15 +47,21 @@ public ResponseEntity<?> getAppointments(
     @PathVariable String patientName,
     @PathVariable String token){
 
-        //Validate doctor token
-        if (!appService.validateToken(token, "doctor")) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+    // Validate doctor token
+    Map<String, Object> tokenCheck = appService.validateToken(token, "doctor");
+    if (tokenCheck.containsKey("message")) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
             .body(Map.of("message", "Invalid or expired token."));
-       }
-
-        //Fetch appointment
-        return appointmentService.getAppointments(date, patientName);
     }
+
+    // Convert date string to LocalDate
+    LocalDate appointmentDate = LocalDate.parse(date);
+
+    // Fetch appointments
+    Map<String, Object> appointments = appointmentService.getAppointments(patientName, appointmentDate, token);
+
+    return ResponseEntity.ok(appointments);
+}
 
 // 4. Define the `bookAppointment` Method:
 //    - Handles HTTP POST requests to create a new appointment.
@@ -69,7 +76,8 @@ public ResponseEntity<?> bookAppointment(
     @RequestBody Appointment appointment) {
 
         //Validate patient token
-        if (!appService.validateToken(token, "patient")) {
+        Map<String, Object> tokenCheck = appService.validateToken(token, "patient");
+        if (!Boolean.TRUE.equals(tokenCheck.get("valid"))) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("message", "Invalid or expired token."));
         }
@@ -82,9 +90,15 @@ public ResponseEntity<?> bookAppointment(
             return ResponseEntity.badRequest().body(Map.of("message", "Appointment time not available"));
         }
 
-        //Book appointment
-        return appointmentService.bookAppointment(appointment);  
-    }
+         //Book appointment
+         int result = appointmentService.bookAppointment(appointment);
+         if(result == 1){
+             return ResponseEntity.ok(Map.of("message", "Appointment booked successfully"));
+         } else {
+             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                     .body(Map.of("message", "Error booking appointment"));
+         }
+     }
 
 // 5. Define the `updateAppointment` Method:
 //    - Handles HTTP PUT requests to modify an existing appointment.
@@ -99,7 +113,8 @@ public ResponseEntity<?> updateAppointment(
     @RequestBody Appointment appointment) {
 
         //Validate token
-        if (!appService.validateToken(token, "patient")) {
+        Map<String, Object> tokenCheck = appService.validateToken(token, "patient");
+        if (!Boolean.TRUE.equals(tokenCheck.get("valid"))) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("message", "Invalid or expired token."));
         }
@@ -120,12 +135,13 @@ public ResponseEntity<?> cancelAppointment(
         @PathVariable String token) {
 
     // Validate patient token
-    if (!app.validateToken(token, "patient")) {
+    Map<String, Object> tokenCheck = appService.validateToken(token, "patient");
+    if (!Boolean.TRUE.equals(tokenCheck.get("valid"))) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(Map.of("message", "Invalid or expired token."));
     }
 
     // Cancel the appointment
-    return appointmentService.cancelAppointment(id);
+    return appointmentService.cancelAppointment(id.longValue(), token);
 }
 }

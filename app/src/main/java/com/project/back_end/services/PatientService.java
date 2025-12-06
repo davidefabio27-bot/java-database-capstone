@@ -185,7 +185,7 @@ public class PatientService {
             }
 
             List<AppointmentDTO> dtos = appointmentRepository
-                    .filterByDoctorNameAndPatientId(name, patientId)
+                    .findByDoctorNameAndPatientId(name, patientId)
                     .stream()
                     .map(a -> new AppointmentDTO(
                                 a.getId(),
@@ -241,7 +241,7 @@ public class PatientService {
             }
 
             List<AppointmentDTO> dtos = appointmentRepository
-                    .filterByDoctorNameAndPatientIdAndStatus(name, patientId, status)
+                    .findByDoctorNameAndPatientIdAndStatus(name, patientId, status)
                     .stream()
                     .map(a -> new AppointmentDTO(
                                 a.getId(),
