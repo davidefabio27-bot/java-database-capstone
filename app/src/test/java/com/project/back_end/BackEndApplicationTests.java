@@ -1,13 +1,12 @@
 package com.project.back_end;
 
+import org.springframework.test.context.ActiveProfiles;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+@ActiveProfiles("test")
 @SpringBootTest
 class BackEndApplicationTests {
-
-	@Test
-	void contextLoads() {
-	}
-
+    @Test
+    void contextLoads() {}
 }
