@@ -10,6 +10,13 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("${api.path}" + "admin")
+
+// CORS FIX – NECESSARIO PER FETCH DAL FRONTEND
+@CrossOrigin(
+        origins = "*",
+        allowedHeaders = "*",
+        methods = {RequestMethod.POST, RequestMethod.OPTIONS}
+)
 public class AdminController {
 
 // 1. Set Up the Controller Class:
@@ -40,4 +47,3 @@ public ResponseEntity<Map<String, String>> adminLogin(@RequestBody Admin admin){
     return appService.validateAdmin(admin);
     }
 }
-

@@ -106,7 +106,7 @@ and triggers modal-based login functionality.
  <!-- index.html -->
 <!-- Landing page for Clinic System: Users select role (Admin, Doctor, Patient) -->
 
-<!-- 1-2. -->
+ <!-- 1-2. -->
  <!DOCTYPE html> 
  <!-- 3. -->
  <html lang="en"> 
@@ -120,7 +120,7 @@ and triggers modal-based login functionality.
     <title>select role</title> 
 
     <!-- 7. -->
-    <link real="icon" herf="../assets/images/logo/Logo.png"> 
+    <link rel="icon" href="/assets/images/logo/logo.png"> 
 
     <!-- 8. -->
     <link rel="stylesheet" href="./assets/css/index.css">
@@ -131,25 +131,25 @@ and triggers modal-based login functionality.
     <script src="./js/render.js" defer></script>
     <script src="./js/components/header.js" defer></script>
     <script src="./js/components/footer.js" defer></script>
-<head>
+ </head>
 
     <!-- 10. -->
 <body>
     <!-- 11. -->
     <div class="container">
         <!-- 12. -->
-        <div class="wrapped">
+        <div class="wrapper">
             <!-- 13. -->
             <div id="header"></div>
 
             <!-- 14. -->
-            <main class="wrapped">
+            <main class="main-content">
                 <!-- 15. -->
-                <h2>select your role<h2>
+                <h2>SELECT YOUR ROLE</h2>
                 <!-- 16. -->
-                <button id="adminBtn" onclick="selectRole('Admin')">Admin</button>
-                <button id="doctorBtn" onclick="selectRole('Doctor')">Doctor</button>
-                <button id="patientBtn" onclick="selectRole('Patient')">Patient</button>
+                <button id="adminLogin" >Admin</button>
+                <button id="doctorLogin" >Doctor</button>
+                <button id="patientLogin" >Patient</button>
             </main>
 
             <!-- 17. -->
@@ -162,7 +162,7 @@ and triggers modal-based login functionality.
         <div id="modal-body"></div>
     </div>
     <!-- 19. -->
-    <script type="module" src="../js/services/index.js" defer></script>
+    <script type="module" src="./js/services/index.js"></script>
     <!-- 20. -->
 </body>
 </html>

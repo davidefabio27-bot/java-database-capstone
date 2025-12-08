@@ -1,4 +1,5 @@
 /home/project/java-database-capstone/app/src/main/java/com/project/back_end/BackEndApplication.java
+/home/project/java-database-capstone/app/src/main/java/com/project/back_end/config/CorsConfig.java
 /home/project/java-database-capstone/app/src/main/java/com/project/back_end/config/WebConfig.java
 /home/project/java-database-capstone/app/src/main/java/com/project/back_end/controllers/AdminController.java
 /home/project/java-database-capstone/app/src/main/java/com/project/back_end/controllers/AppointmentController.java

@@ -19,6 +19,7 @@ com/project/back_end/repo/AppointmentRepository.class
 com/project/back_end/mvc/DashboardController.class
 com/project/back_end/models/Doctor.class
 com/project/back_end/controllers/AppointmentController.class
+com/project/back_end/config/CorsConfig.class
 com/project/back_end/services/PatientService.class
 com/project/back_end/controllers/PrescriptionController.class
 com/project/back_end/services/AppointmentService.class
