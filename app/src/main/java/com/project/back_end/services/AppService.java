@@ -68,27 +68,29 @@ public Map<String, Object> validateToken(String token, String userType) {
 // - If any unexpected error occurs during the process, a 500 Internal Server Error response is returned.
 // This method ensures that only valid admin users can access secured parts of the system.
 
-public ResponseEntity<Map<String, String>> validateAdmin(Admin receivedAdmin) {
+public ResponseEntity<Map<String, String>> validateAdmin(Login receivedLogin) {
     Map<String, String> response = new HashMap<>();
 
     try {
-        Admin admin = adminRepository.findByUsername(receivedAdmin.getUsername());
+        // Cerca admin usando la mail (che sta nella colonna username)
+        Admin admin = adminRepository.findByEmail(receivedLogin.getEmail());
 
         if (admin == null) {
             response.put("message", "Admin not found");
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
 
-        if (!admin.getPassword().equals(receivedAdmin.getPassword())) {
+        if (!admin.getPassword().equals(receivedLogin.getPassword())) {
             response.put("message", "Incorrect password");
             return new ResponseEntity<>(response, HttpStatus.UNAUTHORIZED);
         }
 
-        String token = tokenService.generateToken(admin.getUsername());
+        String token = tokenService.generateToken(admin.getEmail());
         response.put("token", token);
         return new ResponseEntity<>(response, HttpStatus.OK);
 
     } catch (Exception e) {
+        e.printStackTrace(); // per debug
         response.put("message", "Server error");
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }

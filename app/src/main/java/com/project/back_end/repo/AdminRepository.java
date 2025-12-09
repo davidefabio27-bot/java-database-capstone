@@ -22,7 +22,7 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 //      - It will return an Admin entity that matches the provided username.
 //      - If no Admin is found with the given username, it returns null.
 
-Admin findByUsername (String username);
+Admin findByEmail (String email);
 
 // Example: public Admin findByUsername(String username);
 

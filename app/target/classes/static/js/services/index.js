@@ -36,9 +36,9 @@ window.onload = function () {
 // FUNZIONI LOGIN
 // ----------------------------
 window.adminLoginHandler = async function () {
-    const username = document.getElementById("username").value;
+    const email = document.getElementById("email").value;
     const password = document.getElementById("password").value;
-    const admin = { username, password };
+    const admin = { email, password };
 
     try {
         const response = await fetch(ADMIN_API, {

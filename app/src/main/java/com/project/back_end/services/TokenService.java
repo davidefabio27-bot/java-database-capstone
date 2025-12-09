@@ -113,7 +113,7 @@ public class TokenService {
     
             switch (userRole.toLowerCase()) {
                 case "admin":
-                    return adminRepository.findByUsername(email) != null;
+                    return adminRepository.findByEmail(email) != null;
     
                 case "doctor":
                     return doctorRepository.findByEmail(email) != null;

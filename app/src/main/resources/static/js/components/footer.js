@@ -153,3 +153,13 @@ function renderFooter() {
 
 // 11. Call renderFooter to inject the footer when the script loads
 renderFooter();
+
+// Mostra il footer solo quando scrolliamo verso il basso
+window.addEventListener('scroll', () => {
+    const footer = document.querySelector('.footer');
+    if (window.scrollY > 100) { // quando scrollY > 100px
+        footer.style.bottom = '0';
+    } else {
+        footer.style.bottom = '-100px'; // nasconde di nuovo
+    }
+});

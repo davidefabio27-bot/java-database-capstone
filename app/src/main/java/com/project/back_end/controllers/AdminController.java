@@ -5,6 +5,7 @@ import com.project.back_end.services.AppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.project.back_end.dto.Login;
 
 import java.util.Map;
 
@@ -43,7 +44,7 @@ public AdminController(AppService appService) {
 //    - Returns a `ResponseEntity` with a `Map` containing login status or messages.
 
 @PostMapping("/login")
-public ResponseEntity<Map<String, String>> adminLogin(@RequestBody Admin admin){
-    return appService.validateAdmin(admin);
-    }
+public ResponseEntity<Map<String, String>> adminLogin(@RequestBody Login request){
+    return appService.validateAdmin(request);
+}
 }
