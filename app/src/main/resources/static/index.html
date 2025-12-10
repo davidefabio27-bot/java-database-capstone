@@ -106,63 +106,73 @@ and triggers modal-based login functionality.
  <!-- index.html -->
 <!-- Landing page for Clinic System: Users select role (Admin, Doctor, Patient) -->
 
- <!-- 1-2. -->
- <!DOCTYPE html> 
- <!-- 3. -->
- <html lang="en"> 
+<!-- index.html -->
+<!-- Landing page for Clinic System: Users select role (Admin, Doctor, Patient) -->
 
-<!-- 4. -->
- <head> 
-     <!-- 5. -->
+<!-- index.html -->
+<!-- Landing page for Clinic System: Users select role (Admin, Doctor, Patient) -->
+
+<!DOCTYPE html> 
+<html lang="en"> 
+
+<head> 
     <meta charset="UTF-8">
-
-    <!-- 6. -->
     <title>select role</title> 
-
-    <!-- 7. -->
     <link rel="icon" href="/assets/images/logo/logo.png"> 
-
-    <!-- 8. -->
     <link rel="stylesheet" href="./assets/css/index.css">
     <link rel="stylesheet" href="./assets/css/style.css"> 
-
-    <!-- 9. -->
     <script src="./js/util.js" defer></script>
     <script src="./js/render.js" defer></script>
     <script src="./js/components/header.js" defer></script>
     <script src="./js/components/footer.js" defer></script>
- </head>
+</head>
 
-    <!-- 10. -->
 <body>
-    <!-- 11. -->
     <div class="container">
-        <!-- 12. -->
         <div class="wrapper">
-            <!-- 13. -->
             <div id="header"></div>
 
-            <!-- 14. -->
             <main class="main-content">
-                <!-- 15. -->
                 <h2>SELECT YOUR ROLE</h2>
-                <!-- 16. -->
-                <button id="adminLogin" >Admin</button>
-                <button id="doctorLogin" >Doctor</button>
-                <button id="patientLogin" >Patient</button>
+                <button id="adminLogin">Admin</button>
+                <button id="doctorLogin">Doctor</button>
+                <button id="patientLogin">Patient</button>
             </main>
 
-            <!-- 17. -->
             <div id="footer"></div>
         </div>
     </div>
-    <!-- 18. -->
+
+    <!-- Modal -->
     <div id="modal" class="modal">
         <span id="closeModal" class="close">&times;</span>
-        <div id="modal-body"></div>
+        <div id="modal-body">
+            <!-- Admin Login Form -->
+            <div id="adminModal" class="modal-content" style="display:none;">
+                <h3>Admin Login</h3>
+                <input type="email" id="adminEmail" placeholder="Email">
+                <input type="password" id="adminPassword" placeholder="Password">
+                <button type="button" id="submitAdminLogin">Login</button>
+            </div>
+
+            <!-- Doctor Login Form -->
+            <div id="doctorModal" class="modal-content" style="display:none;">
+                <h3>Doctor Login</h3>
+                <input type="email" id="doctorEmail" placeholder="Email">
+                <input type="password" id="doctorPassword" placeholder="Password">
+                <button type="button" id="submitDoctorLogin">Login</button>
+            </div>
+
+            <!-- Patient Login Form -->
+            <div id="patientModal" class="modal-content" style="display:none;">
+                <h3>Patient Login</h3>
+                <input type="email" id="patientEmail" placeholder="Email">
+                <input type="password" id="patientPassword" placeholder="Password">
+                <button type="button" id="submitPatientLogin">Login</button>
+            </div>
+        </div>
     </div>
-    <!-- 19. -->
+
     <script type="module" src="./js/services/index.js"></script>
-    <!-- 20. -->
 </body>
 </html>
