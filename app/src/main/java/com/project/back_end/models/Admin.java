@@ -25,15 +25,6 @@ public class Admin {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // 2. 'username' field:
-    //    - Type: private String
-    //    - Description: 
-    //      - Represents the username of the admin.
-    //      - Used to log into the system.
-    //      - @NotNull validation ensures that this field cannot be null when creating or updating an Admin.
-    @NotNull(message = "username cannot be null")
-    private String username;
-
     // 3. 'password' field:
     //    - Type: private String
     //    - Description: 
@@ -50,6 +41,7 @@ public class Admin {
     //      - Represents the email address of the admin.
     //      - Used for login/authentication in place of username if needed.
     //      - Optional field (can add @NotNull if required).
+    @NotNull(message = "email cannot be null")
     private String email;
 
     // 5. Constructor(s):
@@ -57,8 +49,8 @@ public class Admin {
     //    - A parameterized constructor can be added as needed.
     public Admin() {}
 
-    public Admin(String username, String password) {
-        this.username = username;
+    public Admin(String email, String password) {
+        this.email = email;
         this.password = password;
     }
 
@@ -70,14 +62,6 @@ public class Admin {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getPassword() {
