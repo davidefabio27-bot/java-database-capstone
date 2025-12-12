@@ -6,6 +6,7 @@ import { API_BASE_URL } from "../config/config.js";
 // ----------------------------
 const ADMIN_API = API_BASE_URL + "/admin/login";
 const DOCTOR_API = API_BASE_URL + "/doctor/login";
+const PATIENT_API = API_BASE_URL + "/patient/login";
 
 // ----------------------------
 // CARICAMENTO PAGINA
@@ -52,6 +53,8 @@ window.adminLoginHandler = async function (event) {
             if (modal) modal.style.display = 'none';
 
             alert("Admin logged in!");
+            // Redirect Admin Dashboard
+            window.location.href = "/admin/dashboard";
         } else {
             alert("Invalid credentials!");
         }
@@ -89,8 +92,8 @@ window.doctorLoginHandler = async function (event) {
             const modal = document.getElementById('modal');
             if (modal) modal.style.display = 'none';
 
-            // Redirect al doctor dashboard
-            window.location.href = "/pages/doctor-dashboard.html";
+            // Redirect Doctor Dashboard
+            window.location.href = "/doctor/dashboard";
         } else {
             alert("Invalid credentials!");
         }
@@ -100,33 +103,44 @@ window.doctorLoginHandler = async function (event) {
     }
 };
 
-// ----------------------------
-// AGGIUNGI LISTENER PER I BUTTON DEL MODAL
-// ----------------------------
-window.addEventListener("DOMContentLoaded", () => {
-    const submitAdmin = document.getElementById("submitAdminLogin");
-    const submitDoctor = document.getElementById("submitDoctorLogin");
-    const submitPatient = document.getElementById("submitPatientLogin");
+window.patientLoginHandler = async function (event) {
+    if (event) event.preventDefault(); // blocca submit implicito
 
-    if (submitAdmin) submitAdmin.addEventListener("click", window.adminLoginHandler);
-    if (submitDoctor) submitDoctor.addEventListener("click", window.doctorLoginHandler);
-    if (submitPatient) submitPatient.addEventListener("click", (event) => {
-        if (event) event.preventDefault(); // blocca submit implicito
-        const emailInput = document.getElementById("patientEmail");
-        const passwordInput = document.getElementById("patientPassword");
+    const emailInput = document.getElementById("patientEmail");
+    const passwordInput = document.getElementById("patientPassword");
 
-        if (!emailInput || !passwordInput) {
-            alert("Form not loaded yet!");
-            return;
+    if (!emailInput || !passwordInput) {
+        alert("Form not loaded yet!");
+        return;
+    }
+
+    const patient = { email: emailInput.value, password: passwordInput.value };
+
+    try {
+        const response = await fetch(PATIENT_API, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(patient),
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            localStorage.setItem("token", data.token);
+
+            // Chiudi modal prima del redirect
+            const modal = document.getElementById('modal');
+            if (modal) modal.style.display = 'none';
+
+            // Redirect Patient Dashboard
+            window.location.href = "/pages/patientDashboard.html";
+        } else {
+            alert("Invalid credentials!");
         }
-
-        const patient = { email: emailInput.value, password: passwordInput.value };
-
-        // Qui puoi aggiungere la chiamata API per il login del paziente
-        console.log("Patient login:", patient);
-        alert("Patient login clicked!");
-    });
-});
+    } catch (err) {
+        console.error(err);
+        alert("Something went wrong! Try again.");
+    }
+};
 
 /*
   Import the openModal function to handle showing login popups/modals

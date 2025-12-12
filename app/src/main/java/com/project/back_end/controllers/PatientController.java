@@ -7,6 +7,7 @@ import com.project.back_end.services.AppService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -20,11 +21,11 @@ public class PatientController {
 //    - Annotate the class with `@RestController` to define it as a REST API controller for patient-related operations.
 //    - Use `@RequestMapping("/patient")` to prefix all endpoints with `/patient`, grouping all patient functionalities under a common route.
 
-private final PatientService patientService;
-private final AppService appService;
+    private final PatientService patientService;
+    private final AppService appService;
 
-@Autowired
-public PatientController(PatientService patientService, AppService appService) {
+    @Autowired
+    public PatientController(PatientService patientService, AppService appService) {
         this.patientService = patientService;
         this.appService = appService;
     }
@@ -34,7 +35,7 @@ public PatientController(PatientService patientService, AppService appService) {
 //    - Validates the token for the `"patient"` role using the shared service.
 //    - If the token is valid, returns patient information; otherwise, returns an appropriate error message.
 
-@GetMapping("/{token}")
+    @GetMapping("/{token}")
     public ResponseEntity<?> getPatient(@PathVariable String token) {
         Map<String, Object> response = appService.validateToken(token, "patient");
         if (response.containsKey("message")) { // token non valido
@@ -50,7 +51,7 @@ public PatientController(PatientService patientService, AppService appService) {
 //    - First checks if the patient already exists using the shared service.
 //    - If validation passes, attempts to create the patient and returns success or error messages based on the outcome.
 
-@PostMapping
+    @PostMapping
     public ResponseEntity<?> createPatient(@RequestBody Patient patient) {
         Map<String, Object> response = new HashMap<>();
 
@@ -76,7 +77,7 @@ public PatientController(PatientService patientService, AppService appService) {
 //    - Delegates authentication to the `validatePatientLogin` method in the shared service.
 //    - Returns a response with a token or an error message depending on login success.
 
-@PostMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Login login) {
         return appService.validatePatientLogin(login);
     }
@@ -87,7 +88,7 @@ public PatientController(PatientService patientService, AppService appService) {
 //    - Validates the token using the shared service.
 //    - If valid, retrieves the patient's appointment data from `PatientService`; otherwise, returns a validation error.
 
-@GetMapping("/{id}/{token}")
+    @GetMapping("/{id}/{token}")
     public ResponseEntity<?> getPatientAppointments(@PathVariable Long id,
                                                     @PathVariable String token) {
 
@@ -105,7 +106,7 @@ public PatientController(PatientService patientService, AppService appService) {
 //    - Token must be valid for a `"patient"` role.
 //    - If valid, delegates filtering logic to the shared service and returns the filtered result.
 
-@GetMapping("/filter/{condition}/{name}/{token}")
+    @GetMapping("/filter/{condition}/{name}/{token}")
     public ResponseEntity<?> filterPatientAppointment(@PathVariable String condition,
                                                       @PathVariable String name,
                                                       @PathVariable String token) {
@@ -118,3 +119,4 @@ public PatientController(PatientService patientService, AppService appService) {
         return appService.filterPatient(condition, name, token);
     }
 }
+

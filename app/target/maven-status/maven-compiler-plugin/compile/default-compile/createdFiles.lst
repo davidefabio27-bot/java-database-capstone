@@ -20,8 +20,10 @@ com/project/back_end/mvc/DashboardController.class
 com/project/back_end/models/Doctor.class
 com/project/back_end/controllers/AppointmentController.class
 com/project/back_end/services/PatientService.class
+com/project/back_end/controllers/AdminDashboardController.class
 com/project/back_end/controllers/PrescriptionController.class
 com/project/back_end/services/AppointmentService.class
 com/project/back_end/models/Admin.class
 com/project/back_end/controllers/ValidationFailed.class
+com/project/back_end/controllers/DoctorController$DoctorDashboardController.class
 com/project/back_end/models/Patient.class
