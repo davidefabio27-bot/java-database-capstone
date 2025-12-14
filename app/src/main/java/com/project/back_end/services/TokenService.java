@@ -4,6 +4,8 @@ import com.project.back_end.repo.AdminRepository;
 import com.project.back_end.repo.DoctorRepository;
 import com.project.back_end.repo.PatientRepository;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.io.Decoders;
@@ -84,19 +86,20 @@ public class TokenService {
     // This method allows the application to retrieve the user's identity (email) from the token for further use.
    
     String extractEmail(String token) {
+    try {
+        token = URLDecoder.decode(token, StandardCharsets.UTF_8); 
         SecretKey key = getSigningKey();
-        try {
-            return Jwts.parser()
-                       .verifyWith(key)   // o setSigningKey(key) se compatibile
-                       .build()
-                       .parseSignedClaims(token) // oppure parseClaimsJws(token)
-                       .getPayload() // o .getBody() a seconda del metodo
-                       .getSubject();
-        } catch (JwtException e) {
-            return null;
-        }
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
+    } catch (Exception e) {
+        return null;
     }
-
+}
+  
     // 6. **validateToken Method**
     // This method validates whether a provided JWT token is valid for a specific user role (admin, doctor, or patient).
     // - It first extracts the email from the token using the `extractEmail()` method.
