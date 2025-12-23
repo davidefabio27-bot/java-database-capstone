@@ -86,14 +86,17 @@ window.doctorLoginHandler = async function (event) {
 
         if (response.ok) {
             const data = await response.json();
-            localStorage.setItem("token", data.token);
 
-            // Chiudi modal prima del redirect
+            // SALVA TOKEN E RUOLO
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("userRole", "doctor");
+
+            // Chiudi modal se presente
             const modal = document.getElementById('modal');
             if (modal) modal.style.display = 'none';
 
-            // Redirect Doctor Dashboard
-            window.location.href = "/doctor/dashboard";
+            // Redirect al controller Thymeleaf
+            window.location.href = "/doctor/dashboard"; 
         } else {
             alert("Invalid credentials!");
         }

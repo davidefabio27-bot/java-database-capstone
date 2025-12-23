@@ -104,7 +104,16 @@ export function createDoctorCard(doctor) {
 
         actionsDiv.appendChild(removeBtn);
     }
-    // 10. Patient not logged-in
+    // 10. Doctor logged-in role (nuova parte corretta)
+    else if (role === "doctor") {
+        const dashboardBtn = document.createElement("button");
+        dashboardBtn.textContent = "View Appointments";
+        dashboardBtn.addEventListener("click", () => {
+            window.location.href = "/doctorDashboard.html";
+        });
+        actionsDiv.appendChild(dashboardBtn);
+    }
+    // 11. Patient not logged-in
     else if (role === "patient") {
         const bookNow = document.createElement("button");
         bookNow.textContent = "Book Now";
@@ -113,7 +122,7 @@ export function createDoctorCard(doctor) {
         });
         actionsDiv.appendChild(bookNow);
     }
-    // 11. Logged-in Patient
+    // 12. Logged-in Patient
     else if (role === "loggedPatient") {
         const bookNow = document.createElement("button");
         bookNow.textContent = "Book Now";
@@ -132,10 +141,10 @@ export function createDoctorCard(doctor) {
         actionsDiv.appendChild(bookNow);
     }
 
-    // 12. Final assembly
+    // 13. Final assembly
     card.appendChild(infoDiv);
     card.appendChild(actionsDiv);
 
-    // 13. Return the complete doctor card element
+    // 14. Return the complete doctor card element
     return card;
 }
