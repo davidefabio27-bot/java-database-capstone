@@ -46,6 +46,7 @@ window.adminLoginHandler = async function (event) {
 
         if (response.ok) {
             const data = await response.json();
+            localStorage.setItem("userRole", "admin");
             localStorage.setItem("token", data.token);
 
             // Chiudi modal prima dell’alert
@@ -106,8 +107,8 @@ window.doctorLoginHandler = async function (event) {
     }
 };
 
-window.patientLoginHandler = async function (event) {
-    if (event) event.preventDefault(); // blocca submit implicito
+window.patientLoginHandler = async function(event) {
+    if (event) event.preventDefault();
 
     const emailInput = document.getElementById("patientEmail");
     const passwordInput = document.getElementById("patientPassword");
@@ -117,7 +118,10 @@ window.patientLoginHandler = async function (event) {
         return;
     }
 
-    const patient = { email: emailInput.value, password: passwordInput.value };
+    const patient = { 
+        email: emailInput.value, 
+        password: passwordInput.value 
+    };
 
     try {
         const response = await fetch(PATIENT_API, {
@@ -126,21 +130,25 @@ window.patientLoginHandler = async function (event) {
             body: JSON.stringify(patient),
         });
 
-        if (response.ok) {
-            const data = await response.json();
-            localStorage.setItem("token", data.token);
-
-            // Chiudi modal prima del redirect
-            const modal = document.getElementById('modal');
-            if (modal) modal.style.display = 'none';
-
-            // Redirect Patient Dashboard
-            window.location.href = "/pages/patientDashboard.html";
-        } else {
+        if (!response.ok) {
             alert("Invalid credentials!");
+            return;
         }
+
+        const data = await response.json();
+
+        // ✅ TOKEN + RUOLO
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("userRole", "loggedPatient");
+
+        const modal = document.getElementById('modal');
+        if (modal) modal.style.display = 'none';
+
+        // ✅ PAGINA 
+        window.location.href = "/pages/loggedPatientDashboard.html";
+
     } catch (err) {
-        console.error(err);
+        console.error("Patient login error:", err);
         alert("Something went wrong! Try again.");
     }
 };

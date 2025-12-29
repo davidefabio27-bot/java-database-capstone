@@ -113,33 +113,24 @@ export function createDoctorCard(doctor) {
         });
         actionsDiv.appendChild(dashboardBtn);
     }
-    // 11. Patient not logged-in
-    else if (role === "patient") {
-        const bookNow = document.createElement("button");
-        bookNow.textContent = "Book Now";
-        bookNow.addEventListener("click", () => {
-            alert("Please login to book an appointment.");
-        });
-        actionsDiv.appendChild(bookNow);
-    }
-    // 12. Logged-in Patient
-    else if (role === "loggedPatient") {
-        const bookNow = document.createElement("button");
-        bookNow.textContent = "Book Now";
+    // 11 & 12. Paziente loggato
+else if (role === "loggedPatient") {
+    const bookNow = document.createElement("button");
+    bookNow.textContent = "Book Now";
 
-        bookNow.addEventListener("click", async (e) => {
-            const token = localStorage.getItem("token");
-            if (!token) {
-                alert("Session expired. Please login again.");
-                window.location.href = "/"; 
-                return;
-            }
-            const patientData = await getPatientData(token);
-            showBookingOverlay(e, doctor, patientData);
-        });
+    bookNow.addEventListener("click", async (e) => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            alert("Session expired. Please login again.");
+            window.location.href = "/"; 
+            return;
+        }
+        const patientData = await getPatientData(token);
+        showBookingOverlay(e, doctor, patientData);
+    });
 
-        actionsDiv.appendChild(bookNow);
-    }
+    actionsDiv.appendChild(bookNow);
+}
 
     // 13. Final assembly
     card.appendChild(infoDiv);

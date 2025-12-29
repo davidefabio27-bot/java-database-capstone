@@ -63,7 +63,7 @@ const tableBody = document.getElementById('patientTableBody'); // dove inserire 
 let selectedDate = new Date().toISOString().split('T')[0]; // oggi in formato YYYY-MM-DD
 const token = localStorage.getItem('token'); // token per autenticazione API
     if (!token) window.location.href = "/index.html";
-let patientName = null; // filtro per nome paziente
+let patientName = "null"; // filtro per nome paziente
 
 // 3. Gestione barra di ricerca
 const searchBar = document.getElementById('searchBar');
