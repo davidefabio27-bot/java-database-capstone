@@ -71,23 +71,26 @@
     If saving fails, show an error message
 */
 
-
-// (1) Import required modules
-import { openModal } from "../components/modals.js";
+// adminDashboard.js
+// -----------------
+// Gestione dashboard admin: visualizzazione, filtro, aggiunta medici
+import { openModal } from "./components/modals.js";
 import { getDoctors, filterDoctors, saveDoctor } from "./services/doctorServices.js";
 import { createDoctorCard } from "./components/doctorCard.js";
 
-// (2) Tutto viene eseguito dopo che il DOM è pronto
+// Tutto dopo che il DOM è pronto
 window.addEventListener("DOMContentLoaded", () => {
 
     // Carica tutte le doctor card
     loadDoctorCards();
 
-    // Event binding "Add Doctor"
+    // Bottone "Add Doctor" apre modal (modals.js incluso globalmente)
     const addDocBtn = document.getElementById("addDocBtn");
-    if (addDocBtn) addDocBtn.addEventListener("click", () => openModal("addDoctor"));
-
-    // Event binding search e filtri
+    if (addDocBtn) {
+        addDocBtn.addEventListener("click", () => openModal("addDoctor"));
+    }
+});
+    // Event listener per ricerca e filtri
     const searchBar = document.getElementById("searchBar");
     const filterTime = document.getElementById("filterTime");
     const filterSpecialty = document.getElementById("filterSpecialty");
@@ -95,9 +98,9 @@ window.addEventListener("DOMContentLoaded", () => {
     if (searchBar) searchBar.addEventListener("input", filterDoctorsOnChange);
     if (filterTime) filterTime.addEventListener("change", filterDoctorsOnChange);
     if (filterSpecialty) filterSpecialty.addEventListener("change", filterDoctorsOnChange);
-});
 
-// (3) Function: loadDoctorCards
+// -----------------
+// Funzione per caricare tutte le doctor card
 async function loadDoctorCards() {
     try {
         const doctors = await getDoctors();
@@ -107,15 +110,16 @@ async function loadDoctorCards() {
     }
 }
 
-// (4) Function: renderDoctorCards
+// -----------------
+// Renderizza una lista di medici
 function renderDoctorCards(doctors) {
     const contentDiv = document.getElementById("content");
     if (!contentDiv) {
-        console.error("Div #content non trovato nel DOM!");
+        console.error("Div #content non trovato!");
         return;
     }
 
-    contentDiv.innerHTML = ""; // clear existing cards
+    contentDiv.innerHTML = ""; // pulisce contenuto
 
     if (!doctors || doctors.length === 0) {
         contentDiv.innerHTML = "<p>No doctors found.</p>";
@@ -128,7 +132,8 @@ function renderDoctorCards(doctors) {
     });
 }
 
-// (5) Function: filterDoctorsOnChange
+// -----------------
+// Filtra medici in base a input e dropdown
 async function filterDoctorsOnChange() {
     const name = document.getElementById("searchBar").value || null;
     const time = document.getElementById("filterTime").value || null;
@@ -148,8 +153,9 @@ async function filterDoctorsOnChange() {
     }
 }
 
-// (6) Function: adminAddDoctor
-async function adminAddDoctor() {
+// -----------------
+// Funzione per aggiungere medico dall'admin
+export async function adminAddDoctor() {
     const name = document.getElementById("doctorName").value;
     const email = document.getElementById("doctorEmail").value;
     const phone = document.getElementById("doctorPhone").value;
@@ -170,8 +176,8 @@ async function adminAddDoctor() {
         if (result.success) {
             alert("Doctor added successfully!");
             const modal = document.getElementById("addDoctorModal");
-            if (modal) modal.style.display = "none"; // chiudi modal
-            loadDoctorCards(); // ricarica le doctor card
+            if (modal) modal.style.display = "none";
+            loadDoctorCards(); // ricarica
         } else {
             alert("Failed to add doctor: " + result.message);
         }

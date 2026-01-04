@@ -41,7 +41,7 @@ Import the overlay function for booking appointments from loggedPatient.js
 */
 
 // 1. Import necessary functions from other modules
-import { showBookingOverlay } from "../pages/loggedPatient.js"; // For booking overlay
+import { showBookingOverlay } from "../loggedPatient.js"; // For booking overlay
 import { deleteDoctor } from "../services/doctorServices.js"; // Admin delete doctor
 import { getPatientData } from "../services/patientServices.js"; // Fetch logged-in patient info
 

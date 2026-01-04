@@ -58,15 +58,14 @@ const DOCTOR_API = API_BASE_URL + '/doctor';
 
 // Fetch list of all doctors
 export async function getDoctors() {
-    try {
-        const response = await fetch(DOCTOR_API);
-        if (!response.ok) throw new Error("Failed to fetch doctors");
-        const data = await response.json();
-        return data.doctors || []; // ritorna array vuoto se undefined
-    } catch (err) {
-        console.error(err);
-        return [];
-    }
+  try {
+    const response = await fetch(DOCTOR_API);
+    const data = await response.json();
+    return data.doctors || [];
+  } catch (error) {
+    console.error("Error fetching doctors:", error);
+    return [];
+  }
 }
 
 // Delete doctor by ID with token
