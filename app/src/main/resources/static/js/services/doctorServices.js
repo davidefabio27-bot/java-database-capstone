@@ -106,7 +106,10 @@ export async function filterDoctors(name = "", time = "", specialty = "") {
         const url = `${DOCTOR_API}/filter/${encodeURIComponent(name)}/${encodeURIComponent(time)}/${encodeURIComponent(specialty)}`;
         const response = await fetch(url);
         if (!response.ok) throw new Error("Failed to filter doctors");
+        
         const data = await response.json();
+       
+        if (!data || !data.doctors) return [];
         return data.doctors || [];
     } catch (err) {
         console.error(err);

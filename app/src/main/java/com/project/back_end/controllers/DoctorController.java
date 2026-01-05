@@ -5,6 +5,8 @@ import com.project.back_end.dto.Login;
 import com.project.back_end.services.DoctorService;
 import com.project.back_end.services.AppService;
 import org.springframework.beans.factory.annotation.Autowired;
+import java.time.LocalDate;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -41,12 +43,12 @@ public class DoctorController {
 //    - First validates the token against the user type.
 //    - If the token is invalid, returns an error response; otherwise, returns the availability status for the doctor.
 
-    @GetMapping("/availability/{user}/{doctorId}/{date}/{token}")
-    public ResponseEntity<?> getDoctorAvailability(
-            @PathVariable String user,
-            @PathVariable Long doctorId,
-            @PathVariable String date,
-            @PathVariable String token) {
+@GetMapping("/availability/{user}/{doctorId}/{date}/{token}")
+public ResponseEntity<?> getDoctorAvailability(
+        @PathVariable String user,
+        @PathVariable Long doctorId,
+        @PathVariable @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+        @PathVariable String token) {
 
         // Token validation
         Map<String, Object> tokenCheck = appService.validateToken(token, "doctor");
@@ -55,9 +57,9 @@ public class DoctorController {
                 .body(Map.of("message", "Invalid or expired token."));
 }
 
-        List<String> availability = doctorService.getDoctorAvailability(doctorId, date);
+        List<String> availability = doctorService.getDoctorAvailability(doctorId, date.toString());
         return ResponseEntity.ok(Map.of("availability", availability));
-    }
+}
 
 // 4. Define the `getDoctor` Method:
 //    - Handles HTTP GET requests to retrieve a list of all doctors.

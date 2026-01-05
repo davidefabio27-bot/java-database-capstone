@@ -56,7 +56,7 @@
 
 // 1. Import dei moduli necessari
 import { getAllAppointments } from './services/appointmentRecordService.js';
-import { createPatientRow } from './components/patientRows.js';
+import { createPatientRecordRow  } from "./components/patientRecordRow.js";
 
 // 2. Inizializzazione variabili globali
 const tableBody = document.getElementById('patientTableBody'); // dove inserire le righe
@@ -76,15 +76,15 @@ if (searchBar) {
 }
 
 // 4. Pulsante "Today"
-const todayBtn = document.getElementById('todayButton');
-if (todayBtn) {
-  todayBtn.addEventListener('click', () => {
-    selectedDate = new Date().toISOString().split('T')[0];
-    const datePicker = document.getElementById('datePicker');
-    if (datePicker) datePicker.value = selectedDate;
+const todayButton = document.getElementById("todayButton");
+if (todayButton) {
+  todayButton.addEventListener("click", () => {
+    selectedDate = new Date().toISOString().split("T")[0];
+    document.getElementById("datePicker").value = selectedDate;
     loadAppointments();
   });
 }
+
 
 // 5. Selettore data
 const datePicker = document.getElementById('datePicker');
@@ -97,42 +97,37 @@ if (datePicker) {
 
 // 6. Funzione principale: loadAppointments
 async function loadAppointments() {
-  try {
-    // Step 1: Fetch dati dal backend
-    const appointments = await getAllAppointments(selectedDate, patientName, token);
-
-    // Step 2: Pulisci il contenuto della tabella
-    tableBody.innerHTML = '';
-
-    // Step 3: Nessun appuntamento trovato
-    if (!appointments || appointments.length === 0) {
-      const row = document.createElement('tr');
-      row.innerHTML = `<td colspan="4" style="text-align:center">No Appointments found for today.</td>`;
-      tableBody.appendChild(row);
-      return;
+    try {
+      // Step 1: Fetch dati dal backend
+      const response = await getAllAppointments(selectedDate, patientName, token);
+  
+      // Step 2: Estrarre la lista degli appuntamenti dall'oggetto restituito
+      const appointments = response.appointments || [];
+  
+      // Step 3: Pulire il contenuto della tabella
+      tableBody.innerHTML = "";
+  
+      // Step 4: Nessun appuntamento trovato
+      if (!appointments || appointments.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="5" class="noPatientRecord">No Appointments found for selected date.</td></tr>`;
+        return;
+      }
+  
+      // Step 5: Itera sugli appuntamenti e crea le righe
+      appointments.forEach(app => {
+        // Qui passiamo l'intero oggetto app al row creator
+        const row = createPatientRecordRow(app);
+        tableBody.appendChild(row);
+      });
+  
+    } catch (err) {
+      // Step 6: Gestione errori
+      console.error("Error loading appointments:", err);
+      tableBody.innerHTML = `<tr><td colspan="5" class="noPatientRecord">Error loading appointments. Try again later.</td></tr>`;
     }
-
-    // Step 4: Itera sugli appuntamenti
-    appointments.forEach(app => {
-      const patient = {
-        id: app.patientId,
-        name: app.patientName,
-        phone: app.patientPhone,
-        email: app.patientEmail
-      };
-      const tr = createPatientRow(patient);
-      tableBody.appendChild(tr);
-    });
-
-  } catch (error) {
-    // Step 5: Gestione errori
-    tableBody.innerHTML = `<tr><td colspan="4" style="text-align:center">Error loading appointments. Try again later.</td></tr>`;
-    console.error("Error fetching appointments:", error);
   }
-}
-
 // 7. Render iniziale al caricamento della pagina
-window.addEventListener('DOMContentLoaded', () => {
-  if (typeof renderContent === 'function') renderContent();
-  loadAppointments(); // mostra appuntamenti di oggi
-}); 
+document.addEventListener("DOMContentLoaded", () => {
+    renderContent(); // Injects header/footer layout
+    loadAppointments(); // Loads today's appointments
+  });
