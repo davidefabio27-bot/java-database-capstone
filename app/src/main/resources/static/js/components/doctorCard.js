@@ -45,37 +45,41 @@ import { showBookingOverlay } from "../loggedPatient.js"; // For booking overlay
 import { deleteDoctor } from "../services/doctorServices.js"; // Admin delete doctor
 import { getPatientData } from "../services/patientServices.js"; // Fetch logged-in patient info
 
-// 2. Define the function and export it
 export function createDoctorCard(doctor) {
-    // 3. Create the main card container
-    const card = document.createElement("div");
-    card.classList.add("doctor-card");
+  const role = localStorage.getItem("userRole");
+  const token = localStorage.getItem("token");
 
-    // 4. Fetch the user's role from localStorage
-    const role = localStorage.getItem("userRole");
+  // === Main Card Container ===
+  const card = document.createElement("div");
+  card.classList.add("doctor-card");
 
-    // 5. Create a container for doctor information
-    const infoDiv = document.createElement("div");
-    infoDiv.classList.add("doctor-info");
+  // === Info Section ===
+  const info = document.createElement("div");
+  info.classList.add("doctor-info");
 
-    // 6. Create and set doctor details
-    const name = document.createElement("h3");
-    name.textContent = doctor.name;
+  const name = document.createElement("h3");
+  name.textContent = `Dr. ${doctor.name}`;
 
-    const specialization = document.createElement("p");
-    specialization.textContent = `Specialty: ${doctor.specialty}`;
+  const specialty = document.createElement("p");
+  specialty.textContent = `Specialty: ${doctor.specialty}`;
 
-    const email = document.createElement("p");
-    email.textContent = `Email: ${doctor.email}`;
+  const email = document.createElement("p");
+  email.textContent = `Email: ${doctor.email}`;
 
-    const availability = document.createElement("p");
-    availability.textContent = `Availability: ${doctor.availability.join(", ")}`;
+  const phone = document.createElement("p");
+  phone.textContent = `Phone: ${doctor.phone}`;
 
-    // 7. Append all info elements to the info container
-    infoDiv.appendChild(name);
-    infoDiv.appendChild(specialization);
-    infoDiv.appendChild(email);
-    infoDiv.appendChild(availability);
+  const timeList = document.createElement("ul");
+  timeList.classList.add("availability-list");
+  doctor.availableTimes?.forEach(time => {
+    
+    const li = document.createElement("li");
+    li.textContent = time;
+    timeList.appendChild(li);
+  });
+
+  info.append(name, specialty, email, phone, timeList);
+
 
     // 8. Create container for action buttons
     const actionsDiv = document.createElement("div");
@@ -133,7 +137,7 @@ else if (role === "loggedPatient") {
 }
 
     // 13. Final assembly
-    card.appendChild(infoDiv);
+    card.appendChild(info);
     card.appendChild(actionsDiv);
 
     // 14. Return the complete doctor card element

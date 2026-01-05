@@ -113,22 +113,12 @@ async function loadDoctorCards() {
 // -----------------
 // Renderizza una lista di medici
 function renderDoctorCards(doctors) {
-    const contentDiv = document.getElementById("content");
-    if (!contentDiv) {
-        console.error("Div #content non trovato!");
-        return;
-    }
-
-    contentDiv.innerHTML = ""; // pulisce contenuto
-
-    if (!doctors || doctors.length === 0) {
-        contentDiv.innerHTML = "<p>No doctors found.</p>";
-        return;
-    }
+    const contentDiv = document.getElementById("content"); // il container grid
+    contentDiv.innerHTML = ""; // pulisce prima le card
 
     doctors.forEach(doctor => {
-        const card = createDoctorCard(doctor);
-        contentDiv.appendChild(card);
+        const card = createDoctorCard(doctor); // crea la card HTML
+        contentDiv.appendChild(card);           // la aggiunge al container
     });
 }
 

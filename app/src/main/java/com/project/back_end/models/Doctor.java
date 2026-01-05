@@ -7,6 +7,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Table;
 import jakarta.persistence.FetchType;
+import jakarta.persistence.Column;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.JoinColumn;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -21,6 +24,8 @@ import java.util.List;
 @Entity
 @Table(name = "doctor")
 public class Doctor {
+    // ✅ COSTRUTTORE VUOTO OBBLIGATORIO PER JPA
+    public Doctor() {}
 
 // 1. 'id' field:
 //    - Type: private Long
@@ -40,7 +45,8 @@ public class Doctor {
 //      - The @Size(min = 3, max = 100) annotation ensures that the name length is between 3 and 100 characters. 
 //      - Provides validation for correct input and user experience.
     @NotNull
-    @Size(min = 3, max = 100)
+    @Size(min = 3, max = 100, message = "Name must be between 3 and 100 characters")
+    @Column(nullable = false)
     private String name;
 
 // 3. 'specialty' field:
@@ -49,8 +55,9 @@ public class Doctor {
 //      - Represents the medical specialty of the doctor.
 //      - The @NotNull annotation ensures that a specialty must be provided.
 //      - The @Size(min = 3, max = 50) annotation ensures that the specialty name is between 3 and 50 characters long.
-    @NotNull
-    @Size(min = 3, max = 50)
+    @NotNull(message = "Specialty is required")
+    @Size(min = 3, max = 50, message = "Specialty must be between 3 and 50 characters")
+    @Column(nullable = false)
     private String specialty;
 
 // 4. 'email' field:
@@ -59,8 +66,9 @@ public class Doctor {
 //      - Represents the doctor's email address.
 //      - The @NotNull annotation ensures that an email address is required.
 //      - The @Email annotation validates that the email address follows a valid email format (e.g., doctor@example.com).
-    @NotNull
-    @Email
+    @NotNull(message = "Email is required")
+    @Email(message = "Email should be valid")
+    @Column(nullable = false, unique = true)
     private String email;
 
 // 5. 'password' field:
@@ -70,9 +78,10 @@ public class Doctor {
 //      - The @NotNull annotation ensures that a password must be provided.
 //      - The @Size(min = 6) annotation ensures that the password must be at least 6 characters long.
 //      - The @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) annotation ensures that the password is not serialized in the response (hidden from the frontend).
-    @NotNull
-    @Size(min = 6)
+    @NotNull(message = "Password is required")
+    @Size(min = 6, message = "Password must be at least 6 characters long")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(nullable = false)
     private String password;
 
 // 6. 'phone' field:
@@ -81,8 +90,9 @@ public class Doctor {
 //      - Represents the doctor's phone number.
 //      - The @NotNull annotation ensures that a phone number must be provided.
 //      - The @Pattern(regexp = "^[0-9]{10}$") annotation validates that the phone number must be exactly 10 digits long.
-    @NotNull
-    @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits")
+    @NotNull(message = "Phone number is required")
+    @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be exactly 10 digits")
+    @Column(nullable = false, unique = true)
     private String phone;
 
 // 7. 'availableTimes' field:
@@ -91,9 +101,20 @@ public class Doctor {
 //      - Represents the available times for the doctor in a list of time slots.
 //      - Each time slot is represented as a string (e.g., "09:00-10:00", "10:00-11:00").
 //      - The @ElementCollection annotation ensures that the list of time slots is stored as a separate collection in the database.
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "doctor_available_times", joinColumns = @JoinColumn(name = "doctor_id"))
+    @Column(name = "time_slot")
     private List<String> availableTimes;
 
+// Parameterized constructor for convenience
+    public Doctor(String name, String specialty, String email, String password, String phone, List<String> availableTimes) {
+        this.name = name;
+        this.specialty = specialty;
+        this.email = email;
+        this.password = password;
+        this.phone = phone;
+        this.availableTimes = availableTimes;
+    }
 
 // 8. Getters and Setters:
 //    - Standard getter and setter methods are provided for all fields: id, name, specialty, email, password, phone, and availableTimes.
