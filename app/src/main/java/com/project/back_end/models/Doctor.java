@@ -103,7 +103,7 @@ public class Doctor {
 //      - The @ElementCollection annotation ensures that the list of time slots is stored as a separate collection in the database.
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "doctor_available_times", joinColumns = @JoinColumn(name = "doctor_id"))
-    @Column(name = "time_slot")
+    @Column(name = "available_times")
     private List<String> availableTimes;
 
 // Parameterized constructor for convenience
